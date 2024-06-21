@@ -16,9 +16,11 @@ from juno_library import Pipeline
 from typing import Optional
 from version import __package_name__, __version__, __description__
 
+
 def main() -> None:
     juno_clustering = JunoClustering()
     juno_clustering.run()
+
 
 @dataclass
 class JunoClustering(Pipeline):
@@ -30,7 +32,7 @@ class JunoClustering(Pipeline):
         super()._add_args_to_parser()
 
         self.parser.description = "Template juno pipeline. If you see this message please change it to something appropriate"
-        
+
         self.add_argument(
             "--previous-clustering",
             type=Path,
@@ -44,7 +46,7 @@ class JunoClustering(Pipeline):
             required=True,
             metavar="STR",
             help="Type of clustering that should be performed.",
-            choices=['mycobacterium_tuberculosis']
+            choices=["mycobacterium_tuberculosis"],
         )
         self.add_argument(
             "--presets-path",
@@ -53,23 +55,25 @@ class JunoClustering(Pipeline):
             help="Path to a custom presets file.",
         )
 
-        
     def _parse_args(self) -> argparse.Namespace:
         args = super()._parse_args()
 
         # Check if max distance is not smaller than threshold
         if args.max_distance < args.threshold:
-            raise ValueError("Maximum distance to calculate should be larger than threshold.")
+            raise ValueError(
+                "Maximum distance to calculate should be larger than threshold."
+            )
         elif args.max_distance < 50:
-            logging.warning("""Maximum distance to calculate is set to a low value, which might remove a lot of information.\n
-                            Note this parameter is not the clustering threshold.""")
+            logging.warning(
+                """Maximum distance to calculate is set to a low value, which might remove a lot of information.\n
+                            Note this parameter is not the clustering threshold."""
+            )
 
         # Optional arguments are loaded into self here
         self.previous_clustering: str = args.previous_clustering
         self.clustering_preset: str = args.clustering_preset
 
         return args
-
 
     def setup(self) -> None:
         super().setup()
@@ -80,7 +84,7 @@ class JunoClustering(Pipeline):
             self.snakemake_args["singularity_args"] = " ".join(
                 [
                     self.snakemake_args["singularity_args"]
-                ] # paths that singularity should be able to read from can be bound by adding to the above list
+                ]  # paths that singularity should be able to read from can be bound by adding to the above list
             )
 
         with open(
@@ -94,8 +98,8 @@ class JunoClustering(Pipeline):
             "output_dir": str(self.output_dir),
             "exclusion_file": str(self.exclusion_file),
             "previous_clustering": str(self.previous_clustering),
-            "threshold": str(self.threshold), # from presets
-            "max_distance": str(self.max_distance), # from presets
+            "threshold": str(self.threshold),  # from presets
+            "max_distance": str(self.max_distance),  # from presets
         }
 
     def set_presets(self) -> None:
@@ -109,6 +113,7 @@ class JunoClustering(Pipeline):
         if self.clustering_preset in presets_dict.keys():
             for key, value in presets_dict[self.clustering_preset].items():
                 setattr(self, key, value)
+
 
 if __name__ == "__main__":
     main()
