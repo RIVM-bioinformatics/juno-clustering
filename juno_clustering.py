@@ -69,10 +69,7 @@ class JunoClustering(Pipeline):
         self.clustering_preset: str = args.clustering_preset
 
         return args
-    
-    # Extra class methods for this pipeline can be defined here
-    # def example_class_method(self):
-    #     print(f"example option is set to {self.example}")
+
 
     def setup(self) -> None:
         super().setup()
