@@ -1,0 +1,6 @@
+mycobacterium_tuberculosis:
+  threshold: 12
+  max_distance: 200
+salmonella:
+  threshold: 7
+  max_distance: 200
