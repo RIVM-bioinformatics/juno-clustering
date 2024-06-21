@@ -1,10 +1,10 @@
 """
-Juno template
-Authors: Karim Hajji, Roxanne Wolthuis
+Juno clustering
+Authors: Boas van der Putten, Roxanne Wolthuis, Sohana Singh
 Organization: Rijksinstituut voor Volksgezondheid en Milieu (RIVM)
 Department: Infektieziekteonderzoek, Diagnostiek en Laboratorium
-            Surveillance (IDS), Bacteriologie (BPD)     
-Date: 05-04-2023   
+            Surveillance (IDS)
+Date: 21-06-2023
 """
 
 from pathlib import Path
