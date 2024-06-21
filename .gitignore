@@ -1,3 +1,20 @@
+tests/*/*.log
+tests/curation/clusters_3_edited.csv
+tests/curation/clusters_3.csv
+tests/curation/clusters_5.csv
+tests/curation/dists_3.tsv
+tests/curation/dists_5.tsv
+tests/merge/clusters_4.csv
+tests/merge/clusters_5.csv
+tests/merge/dists_4.tsv
+tests/merge/dists_5.tsv
+tests/no_previous_clustering/clusters_4.csv
+tests/no_previous_clustering/dists_4.tsv
+tests/normal_flow/clusters_4.csv
+tests/normal_flow/clusters_7.csv
+tests/normal_flow/dists_4.tsv
+tests/normal_flow/dists_7.tsv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

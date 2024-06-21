@@ -1,5 +1,5 @@
 threads:
-    template_rule: 1
+    compression: 32
 
 mem_gb:
-    template_rule: 1
+    compression: 16
