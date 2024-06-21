@@ -9,7 +9,7 @@ cd $SCRIPT_DIR
 
 snp-dists -m aln_4.fa > dists_4.tsv
 
-python "$MAIN_DIR"/cluster.py \
+python "$MAIN_DIR"/workflow/scripts/cluster.py \
     --distances dists_4.tsv \
     --output clusters_4.csv \
     --threshold 2 \
