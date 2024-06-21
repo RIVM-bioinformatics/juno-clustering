@@ -9,7 +9,7 @@ cd $SCRIPT_DIR
 
 snp-dists -m aln_4.fa > dists_4.tsv
 
-python "$MAIN_DIR"/cluster.py \
+python "$MAIN_DIR"/workflow/scripts/cluster.py \
     --previous-clustering clusters_2.csv \
     --distances dists_4.tsv \
     --output clusters_4.csv \
@@ -19,7 +19,7 @@ python "$MAIN_DIR"/cluster.py \
 
 snp-dists -m aln_7.fa > dists_7.tsv
 
-python "$MAIN_DIR"/cluster.py \
+python "$MAIN_DIR"/workflow/scripts/cluster.py \
     --previous-clustering clusters_4.csv \
     --distances dists_7.tsv \
     --output clusters_7.csv \
