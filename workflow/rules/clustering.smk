@@ -13,7 +13,7 @@ rule clustering:
     conda:
         "../envs/clustering.yaml"
     container:
-        ""
+        "docker://ghcr.io/boasvdp/network_analysis:0.2"
     params:
         threshold=config["cluster_threshold"],
         merged_cluster_separator=config["merged_cluster_separator"],
