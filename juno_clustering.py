@@ -13,7 +13,7 @@ import yaml
 import argparse
 from dataclasses import dataclass, field
 from juno_library import Pipeline
-from typing import Optional
+from typing import Optional, Union, List, ClassVar
 from version import __package_name__, __version__, __description__
 
 
@@ -26,7 +26,7 @@ def main() -> None:
 class JunoClustering(Pipeline):
     pipeline_name: str = __package_name__
     pipeline_version: str = __version__
-    input_type: str = "fastq"
+    input_type: ClassVar[Union[str|List[str]]] = ["fasta"]
 
     def _add_args_to_parser(self) -> None:
         super()._add_args_to_parser()
@@ -42,7 +42,7 @@ class JunoClustering(Pipeline):
         )
         self.add_argument(
             "--clustering-preset",
-            type=Path,
+            type=str,
             required=True,
             metavar="STR",
             help="Type of clustering that should be performed.",
@@ -54,24 +54,23 @@ class JunoClustering(Pipeline):
             metavar="STR",
             help="Path to a custom presets file.",
         )
+        self.add_argument(
+            "--merged-cluster-separator",
+            type=str,
+            required=False,
+            metavar="STR",
+            help="Separator for merged cluster names.",
+            default="|",
+        )
 
     def _parse_args(self) -> argparse.Namespace:
         args = super()._parse_args()
 
-        # Check if max distance is not smaller than threshold
-        if args.max_distance < args.threshold:
-            raise ValueError(
-                "Maximum distance to calculate should be larger than threshold."
-            )
-        elif args.max_distance < 50:
-            logging.warning(
-                """Maximum distance to calculate is set to a low value, which might remove a lot of information.\n
-                            Note this parameter is not the clustering threshold."""
-            )
-
         # Optional arguments are loaded into self here
         self.previous_clustering: str = args.previous_clustering
         self.clustering_preset: str = args.clustering_preset
+        self.presets_path: Optional[Path] = args.presets_path
+        self.merged_cluster_separator: str = args.merged_cluster_separator
 
         return args
 
@@ -81,10 +80,11 @@ class JunoClustering(Pipeline):
         self.set_presets()
 
         if self.snakemake_args["use_singularity"]:
+            list_sing_args = [self.snakemake_args["singularity_args"]]
+            if self.previous_clustering:
+                list_sing_args.append(f"--bind {self.previous_clustering}:{self.previous_clustering}")
             self.snakemake_args["singularity_args"] = " ".join(
-                [
-                    self.snakemake_args["singularity_args"]
-                ]  # paths that singularity should be able to read from can be bound by adding to the above list
+                list_sing_args
             )
 
         with open(
@@ -98,8 +98,10 @@ class JunoClustering(Pipeline):
             "output_dir": str(self.output_dir),
             "exclusion_file": str(self.exclusion_file),
             "previous_clustering": str(self.previous_clustering),
-            "threshold": str(self.threshold),  # from presets
+            "merged_cluster_separator": str(self.merged_cluster_separator),
+            "cluster_threshold": str(self.cluster_threshold),  # from presets
             "max_distance": str(self.max_distance),  # from presets
+            "clustering_type": str(self.clustering_type), # from presets
         }
 
     def set_presets(self) -> None:
@@ -113,6 +115,18 @@ class JunoClustering(Pipeline):
         if self.clustering_preset in presets_dict.keys():
             for key, value in presets_dict[self.clustering_preset].items():
                 setattr(self, key, value)
+                
+        # Check if max distance is not smaller than threshold
+        if self.max_distance < self.cluster_threshold:
+            raise ValueError(
+                "Maximum distance to calculate should be larger than threshold."
+            )
+        elif self.max_distance < 50:
+            logging.warning(
+                """Maximum distance to calculate is set to a low value, which might remove a lot of information.\n
+                            Note this parameter is not the clustering threshold."""
+            )
+
 
 
 if __name__ == "__main__":

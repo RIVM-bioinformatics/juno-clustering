@@ -12,18 +12,18 @@ for param in ["threads", "mem_gb"]:
 OUT = config["output_dir"]
 
 # find collection using collfinder
-# iget collection and save as "previous_clustering" in working dir
-PREVIOUS_CLUSTERING = "previous_clustering"
+# iget collection and save to a path passed to cli
+PREVIOUS_CLUSTERING = config["previous_clustering"]
 
 # Configure pipeline outputs
 expected_outputs = []
 
-expected_outputs.append(OUT + "/clusters.tsv")
+expected_outputs.append(OUT + "/clusters.csv")
 expected_outputs.append(OUT + "/distances.tsv")
 
-if config["clustering_type"] == "juno-variant-typing":
+if config["clustering_type"] == "alignment":
     expected_outputs.append(OUT + "/aln.fa.gz")
-elif config["clustering_type"] == "juno-cgmlst":
+elif config["clustering_type"] == "mlst":
     expected_outputs.append(OUT + "/cgmlst_alleles.tsv.gz")
 
 

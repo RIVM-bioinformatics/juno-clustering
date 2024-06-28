@@ -25,7 +25,7 @@ distle \
 --input-format fasta \
 --output-mode {params.output_mode} \
 --maxdist {params.max_distance} \
-{input} {output} 2&>1 > {log}
+{input} {output} 2>&1 > {log}
         """
 
 
@@ -53,5 +53,5 @@ distle \
 --input-format cgmlst \
 --output-mode {params.output_mode} \
 --maxdist {params.max_distance} \
-{input} {output} 2&>1 > {log}
+{input} {output} 2>&1 > {log}
         """
