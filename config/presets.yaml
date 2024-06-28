@@ -1,6 +1,8 @@
 mycobacterium_tuberculosis:
-  threshold: 12
+  cluster_threshold: 12
   max_distance: 200
+  clustering_type: "alignment"
 salmonella:
-  threshold: 7
+  cluster_threshold: 7
   max_distance: 200
+  clustering_type: "mlst"
