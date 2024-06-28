@@ -2,5 +2,4 @@ channels:
 - conda-forge
 - bioconda
 dependencies:
-- pigz=2.8
-- pandas=2.2.*
+- distle==0.1.1
