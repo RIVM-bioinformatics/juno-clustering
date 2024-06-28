@@ -1,5 +1,4 @@
-# TO DO
-## Add per sample output for juno-cgmlst which can be listed by juno-library
+# TODO: Add per sample output for juno-cgmlst which can be listed by juno-library
 
 
 rule decompress_snp_profiles:
