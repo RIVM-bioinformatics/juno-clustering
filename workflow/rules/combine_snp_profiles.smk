@@ -3,7 +3,7 @@
 
 rule decompress_snp_profiles:
     input:
-        INPUT + "/aln.fa.gz",
+        PREVIOUS_CLUSTERING + "/aln.fa.gz",
     output:
         temp(OUT + "/old_aln.fa"),
     log:
@@ -15,7 +15,7 @@ rule decompress_snp_profiles:
     conda:
         "../envs/scripts.yaml"
     container:
-        ""
+        "docker://ghcr.io/boasvdp/juno_clustering_scripts:0.1"
     params:
         script="workflow/scripts/script.py",
     threads: config["threads"]["compression"]
@@ -40,13 +40,15 @@ rule add_snp_profiles:
     message:
         "Adding SNP profiles to {input.previous_aln}."
     resources:
-        mem_gb=config["mem_gb"]["add_snp_profiles"],
+        mem_gb=config["mem_gb"]["compression"],
     conda:
         "../envs/scripts.yaml"
     container:
-        ""
+        "docker://ghcr.io/boasvdp/juno_clustering_scripts:0.1"
+    threads: config["threads"]["compression"]
     shell:
         """
+# TODO: find better way of combining samples, e.g. make sure no duplicate names
 cat {input.previous_aln} {input.assemblies} > {output}
         """
 
@@ -65,7 +67,7 @@ rule compress_snp_profiles:
     conda:
         "../envs/scripts.yaml"
     container:
-        ""
+        "docker://ghcr.io/boasvdp/juno_clustering_scripts:0.1"
     threads: config["threads"]["compression"]
     shell:
         """

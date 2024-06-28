@@ -9,7 +9,7 @@ rule clustering:
     message:
         "Clustering {input.distances} with threshold {params.threshold}"
     resources:
-        mem_gb=config["mem_gb"]["compression"],
+        mem_gb=config["mem_gb"]["clustering"],
     conda:
         "../envs/clustering.yaml"
     container:

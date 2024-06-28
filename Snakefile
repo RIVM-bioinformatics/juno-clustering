@@ -11,6 +11,10 @@ for param in ["threads", "mem_gb"]:
 
 OUT = config["output_dir"]
 
+# find collection using collfinder
+# iget collection and save as "previous_clustering" in working dir
+PREVIOUS_CLUSTERING = "previous_clustering"
+
 # Configure pipeline outputs
 expected_outputs = []
 
