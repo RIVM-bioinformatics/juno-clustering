@@ -29,6 +29,7 @@ elif config["clustering_type"] == "mlst":
 
 localrules:
     all,
+    copy_assemblies_to_temp,
 
 
 include: "workflow/rules/combine_snp_profiles.smk"

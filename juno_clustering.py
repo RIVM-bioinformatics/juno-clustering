@@ -26,7 +26,7 @@ def main() -> None:
 class JunoClustering(Pipeline):
     pipeline_name: str = __package_name__
     pipeline_version: str = __version__
-    input_type: ClassVar[Union[str|List[str]]] = ["fasta"]
+    input_type: ClassVar[Union[str | List[str]]] = ["fasta"]
 
     def _add_args_to_parser(self) -> None:
         super()._add_args_to_parser()
@@ -82,10 +82,10 @@ class JunoClustering(Pipeline):
         if self.snakemake_args["use_singularity"]:
             list_sing_args = [self.snakemake_args["singularity_args"]]
             if self.previous_clustering:
-                list_sing_args.append(f"--bind {self.previous_clustering}:{self.previous_clustering}")
-            self.snakemake_args["singularity_args"] = " ".join(
-                list_sing_args
-            )
+                list_sing_args.append(
+                    f"--bind {self.previous_clustering}:{self.previous_clustering}"
+                )
+            self.snakemake_args["singularity_args"] = " ".join(list_sing_args)
 
         with open(
             Path(__file__).parent.joinpath("config/pipeline_parameters.yaml")
@@ -101,7 +101,8 @@ class JunoClustering(Pipeline):
             "merged_cluster_separator": str(self.merged_cluster_separator),
             "cluster_threshold": str(self.cluster_threshold),  # from presets
             "max_distance": str(self.max_distance),  # from presets
-            "clustering_type": str(self.clustering_type), # from presets
+            "clustering_type": str(self.clustering_type),  # from presets
+            "N_content_threshold": str(self.N_content_threshold),  # from presets
         }
 
     def set_presets(self) -> None:
@@ -115,7 +116,7 @@ class JunoClustering(Pipeline):
         if self.clustering_preset in presets_dict.keys():
             for key, value in presets_dict[self.clustering_preset].items():
                 setattr(self, key, value)
-                
+
         # Check if max distance is not smaller than threshold
         if self.max_distance < self.cluster_threshold:
             raise ValueError(
@@ -126,7 +127,6 @@ class JunoClustering(Pipeline):
                 """Maximum distance to calculate is set to a low value, which might remove a lot of information.\n
                             Note this parameter is not the clustering threshold."""
             )
-
 
 
 if __name__ == "__main__":
