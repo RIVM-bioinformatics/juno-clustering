@@ -3,8 +3,12 @@ mycobacterium_tuberculosis:
   max_distance: 200
   clustering_type: "alignment"
   N_content_threshold: 0.5
+  coverage_threshold: 20
+  inclusion_pattern: "^NLA[a-zA-Z0-9]+"
 salmonella:
   cluster_threshold: 7
   max_distance: 200
   clustering_type: "mlst"
   N_content_threshold: None
+  coverage_threshold: 0
+  inclusion_pattern: "*"

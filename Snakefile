@@ -15,6 +15,10 @@ OUT = config["output_dir"]
 # iget collection and save to a path passed to cli
 PREVIOUS_CLUSTERING = config["previous_clustering"]
 
+if PREVIOUS_CLUSTERING == "None":
+    Path(OUT).mkdir(parents=True, exist_ok=True)
+    Path(OUT + "/previous_list_excluded_samples.txt").touch()
+
 # Configure pipeline outputs
 expected_outputs = []
 
@@ -30,6 +34,8 @@ elif config["clustering_type"] == "mlst":
 localrules:
     all,
     copy_assemblies_to_temp,
+    copy_or_touch_list_excluded_samples,
+    touch_list_excluded_samples,
 
 
 include: "workflow/rules/combine_snp_profiles.smk"
