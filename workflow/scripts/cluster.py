@@ -66,6 +66,26 @@ def read_data(distances, previous_clustering):
         )
     return df_distances, df_previous_clustering
 
+@timing
+def emit_and_save_critical_warning(message, output_path):
+    """
+    Emit a warning and save it to a file
+
+    Parameters
+    ----------
+    message : str
+        Warning message
+    output_path : Path
+        Path to output file
+
+    Returns
+    -------
+    None
+
+    """
+    logging.critical(message)
+    with open(output_path, "a") as f:
+        f.write(message + "\n")
 
 @timing
 def get_df_nodes(df_distances, df_previous_clustering):
@@ -256,7 +276,7 @@ def enlist_clusters(graph, attribute):
 
 
 @timing
-def infer_clusters(graph, merged_cluster_separator):
+def infer_clusters(graph, merged_cluster_separator, warnings_path):
     """
     Infer clusters based on connected components
 
@@ -266,6 +286,8 @@ def infer_clusters(graph, merged_cluster_separator):
         Graph with distances and clusters
     merged_cluster_separator : str
         Separator for merged cluster names
+    warnings_path : Path
+        Path to warnings file
 
     Returns
     -------
@@ -294,9 +316,7 @@ def infer_clusters(graph, merged_cluster_separator):
         set_curated_clusters = enlist_clusters(subgraph, "curated_cluster")
         set_final_clusters = enlist_clusters(subgraph, "final_cluster")
         if len(set_curated_clusters) > 1:
-            logging.critical(
-                f"WARNING: Curated clusters {set_curated_clusters} have merged!"
-            )
+            emit_and_save_critical_warning(f"WARNING: Curated clusters {set_curated_clusters} have merged!", warnings_path)
             inferred_cluster = construct_merged_cluster_name(
                 set_curated_clusters, merged_cluster_separator
             )
@@ -306,9 +326,7 @@ def infer_clusters(graph, merged_cluster_separator):
                 f"Cluster {inferred_cluster} is curated and not merged with others"
             )
         elif len(set_final_clusters) > 1:
-            logging.critical(
-                f"WARNING: Final clusters {set_final_clusters} have merged!"
-            )
+            emit_and_save_critical_warning(f"WARNING: Final clusters {set_final_clusters} have merged!", warnings_path)
             inferred_cluster = construct_merged_cluster_name(
                 set_final_clusters, merged_cluster_separator
             )
@@ -387,7 +405,7 @@ def main(args):
 
     G = create_graph(df_distances_filtered, df_nodes)
 
-    inferred_cluster_dict = infer_clusters(G, args.merged_cluster_separator)
+    inferred_cluster_dict = infer_clusters(G, args.merged_cluster_separator, args.warnings_path)
 
     create_output(inferred_cluster_dict, df_previous_clustering, args.output)
 
@@ -420,6 +438,9 @@ if __name__ == "__main__":
         "--log", type=Path, help="Path to log file", default="cluster.log"
     )
     parser.add_argument(
+        "--warnings-path", type=Path, help="Path to warnings file"
+    )
+    parser.add_argument(
         "-v", "--verbose", action="count", default=0, help="Verbosity level"
     )
     args = parser.parse_args()
@@ -435,6 +456,12 @@ if __name__ == "__main__":
     if args.threshold is None:
         logging.warning("Threshold not set, using default value of 10")
         args.threshold = 10
+
+    if args.warnings_path is None:
+        if args.output == sys.stdout:
+            args.warnings_path = Path("WARNINGS.txt")
+        else:
+            args.warnings_path = args.output.with_suffix(".WARNINGS.txt")
 
     logging.info(f"Starting clustering")
     main(args)
