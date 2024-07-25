@@ -67,10 +67,11 @@ class JunoClustering(Pipeline):
         args = super()._parse_args()
 
         # Optional arguments are loaded into self here
-        self.previous_clustering: str = args.previous_clustering
+        self.previous_clustering: Optional[str] = args.previous_clustering
         self.clustering_preset: str = args.clustering_preset
         self.presets_path: Optional[Path] = args.presets_path
         self.merged_cluster_separator: str = args.merged_cluster_separator
+        self.clustering_preset: str = args.clustering_preset
 
         return args
 
@@ -99,10 +100,13 @@ class JunoClustering(Pipeline):
             "exclusion_file": str(self.exclusion_file),
             "previous_clustering": str(self.previous_clustering),
             "merged_cluster_separator": str(self.merged_cluster_separator),
+            "clustering_preset": str(self.clustering_preset),
             "cluster_threshold": str(self.cluster_threshold),  # from presets
             "max_distance": str(self.max_distance),  # from presets
             "clustering_type": str(self.clustering_type),  # from presets
             "N_content_threshold": str(self.N_content_threshold),  # from presets
+            "coverage_threshold": str(self.coverage_threshold),  # from presets
+            "inclusion_pattern": str(self.inclusion_pattern),  # from presets
         }
 
     def set_presets(self) -> None:

@@ -67,6 +67,36 @@ def read_data(distances, previous_clustering):
     return df_distances, df_previous_clustering
 
 @timing
+def exclude_samples(df_distances, exclude_list):
+    """
+    Exclude samples from the distances dataframe
+
+    Parameters
+    ----------
+    df_distances : pd.DataFrame
+        Dataframe with distances
+    exclude_list : Path
+        Path to list of samples to exclude
+
+    Returns
+    -------
+    df_distances : pd.DataFrame
+        Dataframe with distances
+
+    """
+    with open(exclude_list) as f:
+        nr_lines = len(f.readlines())
+    if nr_lines > 0:
+        logging.info(f"Excluding samples")
+        df_exclude = pd.read_csv(exclude_list, sep="\t")
+        exclude_samples = df_exclude["sample"].tolist()
+        df_distances = df_distances[
+            ~df_distances["sample1"].isin(exclude_samples)
+            & ~df_distances["sample2"].isin(exclude_samples)
+        ]
+    return df_distances
+
+@timing
 def emit_and_save_critical_warning(message, output_path):
     """
     Emit a warning and save it to a file
@@ -399,6 +429,8 @@ def main(args):
         args.distances, args.previous_clustering
     )
 
+    df_distances = exclude_samples(df_distances, args.exclude_list)
+
     df_nodes = get_df_nodes(df_distances, df_previous_clustering)
 
     df_distances_filtered = filter_edges(df_distances, args.threshold)
@@ -433,6 +465,9 @@ if __name__ == "__main__":
         type=str,
         help="Separator for merged clusters",
         default="|",
+    )
+    parser.add_argument(
+        "--exclude-list", type=Path, help="Path to list of samples to exclude from clustering"
     )
     parser.add_argument(
         "--log", type=Path, help="Path to log file", default="cluster.log"
