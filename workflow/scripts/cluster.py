@@ -66,6 +66,7 @@ def read_data(distances, previous_clustering):
         )
     return df_distances, df_previous_clustering
 
+
 @timing
 def clean_sample_columns(df, cols, fixed_string):
     """
@@ -119,6 +120,7 @@ def exclude_samples(df_distances, exclude_list):
         ]
     return df_distances
 
+
 @timing
 def emit_and_save_critical_warning(message, output_path):
     """
@@ -139,6 +141,7 @@ def emit_and_save_critical_warning(message, output_path):
     logging.critical(message)
     with open(output_path, "a") as f:
         f.write(message + "\n")
+
 
 @timing
 def get_df_nodes(df_distances, df_previous_clustering):
@@ -369,7 +372,10 @@ def infer_clusters(graph, merged_cluster_separator, warnings_path):
         set_curated_clusters = enlist_clusters(subgraph, "curated_cluster")
         set_final_clusters = enlist_clusters(subgraph, "final_cluster")
         if len(set_curated_clusters) > 1:
-            emit_and_save_critical_warning(f"WARNING: Curated clusters {set_curated_clusters} have merged!", warnings_path)
+            emit_and_save_critical_warning(
+                f"WARNING: Curated clusters {set_curated_clusters} have merged!",
+                warnings_path,
+            )
             inferred_cluster = construct_merged_cluster_name(
                 set_curated_clusters, merged_cluster_separator
             )
@@ -379,7 +385,10 @@ def infer_clusters(graph, merged_cluster_separator, warnings_path):
                 f"Cluster {inferred_cluster} is curated and not merged with others"
             )
         elif len(set_final_clusters) > 1:
-            emit_and_save_critical_warning(f"WARNING: Final clusters {set_final_clusters} have merged!", warnings_path)
+            emit_and_save_critical_warning(
+                f"WARNING: Final clusters {set_final_clusters} have merged!",
+                warnings_path,
+            )
             inferred_cluster = construct_merged_cluster_name(
                 set_final_clusters, merged_cluster_separator
             )
@@ -452,7 +461,9 @@ def main(args):
         args.distances, args.previous_clustering
     )
 
-    df_distances = clean_sample_columns(df_distances, ["sample1", "sample2"], "_contig1")
+    df_distances = clean_sample_columns(
+        df_distances, ["sample1", "sample2"], "_contig1"
+    )
 
     if args.exclude_list:
         df_distances = exclude_samples(df_distances, args.exclude_list)
@@ -463,7 +474,9 @@ def main(args):
 
     G = create_graph(df_distances_filtered, df_nodes)
 
-    inferred_cluster_dict = infer_clusters(G, args.merged_cluster_separator, args.warnings_path)
+    inferred_cluster_dict = infer_clusters(
+        G, args.merged_cluster_separator, args.warnings_path
+    )
 
     create_output(inferred_cluster_dict, df_previous_clustering, args.output)
 
@@ -493,14 +506,14 @@ if __name__ == "__main__":
         default="|",
     )
     parser.add_argument(
-        "--exclude-list", type=Path, help="Path to list of samples to exclude from clustering"
+        "--exclude-list",
+        type=Path,
+        help="Path to list of samples to exclude from clustering",
     )
     parser.add_argument(
         "--log", type=Path, help="Path to log file", default="cluster.log"
     )
-    parser.add_argument(
-        "--warnings-path", type=Path, help="Path to warnings file"
-    )
+    parser.add_argument("--warnings-path", type=Path, help="Path to warnings file")
     parser.add_argument(
         "-v", "--verbose", action="count", default=0, help="Verbosity level"
     )
