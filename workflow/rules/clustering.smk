@@ -97,7 +97,7 @@ else:
         input:
             distances=OUT + "/distances.tsv",
             previous_clustering=PREVIOUS_CLUSTERING + "/clusters.csv",
-            exclude_list=OUT + "/list_excluded_samples.txt",
+            exclude_list=OUT + "/list_excluded_samples.tsv",
         output:
             OUT + "/clusters.csv",
         log:
@@ -124,6 +124,6 @@ python workflow/scripts/cluster.py \
 --log {log} \
 --verbose \
 --merged-cluster-separator {params.merged_cluster_separator:q} \
---exclude {input.exclude_list}
+--exclude {input.exclude_list} \
 --output {output}
             """

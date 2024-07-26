@@ -67,6 +67,29 @@ def read_data(distances, previous_clustering):
     return df_distances, df_previous_clustering
 
 @timing
+def clean_sample_columns(df, cols, fixed_string):
+    """
+    Remove fixed string from columns
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe with distances
+    cols : list
+        Columns to clean
+
+    Returns
+    -------
+    df : pd.DataFrame
+        Dataframe with cleaned sample names
+
+    """
+    for col in cols:
+        df[col] = df[col].str.replace(fixed_string, "")
+    return df
+
+
+@timing
 def exclude_samples(df_distances, exclude_list):
     """
     Exclude samples from the distances dataframe
@@ -428,6 +451,8 @@ def main(args):
     df_distances, df_previous_clustering = read_data(
         args.distances, args.previous_clustering
     )
+
+    df_distances = clean_sample_columns(df_distances, ["sample1", "sample2"], "_contig1")
 
     if args.exclude_list:
         df_distances = exclude_samples(df_distances, args.exclude_list)
