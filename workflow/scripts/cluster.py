@@ -429,7 +429,8 @@ def main(args):
         args.distances, args.previous_clustering
     )
 
-    df_distances = exclude_samples(df_distances, args.exclude_list)
+    if args.exclude_list:
+        df_distances = exclude_samples(df_distances, args.exclude_list)
 
     df_nodes = get_df_nodes(df_distances, df_previous_clustering)
 
