@@ -10,6 +10,7 @@ for param in ["threads", "mem_gb"]:
         config[param][k] = int(config[param][k])
 
 OUT = config["output_dir"]
+INPUT = config["input_dir"]
 
 # find collection using collfinder
 # iget collection and save to a path passed to cli
