@@ -1,9 +1,10 @@
 if config["clustering_preset"] == "mycobacterium_tuberculosis":
+
     rule copy_or_touch_list_excluded_samples:
         output:
             temp(OUT + "/previous_list_excluded_samples.tsv"),
         params:
-            previous_list = PREVIOUS_CLUSTERING + "/list_excluded_samples.tsv"
+            previous_list=PREVIOUS_CLUSTERING + "/list_excluded_samples.tsv",
         shell:
             """
 if [ -f {params.previous_list} ]
@@ -13,11 +14,13 @@ else
     touch {output}
 fi
             """
-    
+
     rule list_excluded_samples:
         input:
-            seq_exp_json = expand(INPUT + "/mtb_typing/seq_exp_json/{sample}.json", sample=SAMPLES),
-            exclude_list = OUT + "/previous_list_excluded_samples.tsv",
+            seq_exp_json=expand(
+                INPUT + "/mtb_typing/seq_exp_json/{sample}.json", sample=SAMPLES
+            ),
+            exclude_list=OUT + "/previous_list_excluded_samples.tsv",
         output:
             OUT + "/list_excluded_samples.tsv",
         log:
@@ -45,7 +48,9 @@ python workflow/scripts/list_excluded_samples.py \
 --coverage-threshold {params.coverage_threshold} \
 2>&1> {log}
             """
+
 else:
+
     rule touch_list_excluded_samples:
         output:
             temp(OUT + "/list_excluded_samples.tsv"),
