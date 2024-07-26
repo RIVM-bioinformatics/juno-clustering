@@ -159,3 +159,5 @@ config/variables.yaml
 config/juno_call.txt 
 config/user_parameters.yaml
 core.*
+tests/merge/clusters_4.WARNINGS.txt
+tests/merge/clusters_5.WARNINGS.txt
