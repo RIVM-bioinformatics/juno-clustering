@@ -21,6 +21,7 @@ then
     exit 1
 fi
 
+set +u
 # check if there is an exclusion file, if so change the parameter
 if [ ! -z "${irods_input_sequencing__run_id}" ] && [ -f "/data/BioGrid/NGSlab/sample_sheets/${irods_input_sequencing__run_id}.exclude" ]
 then
@@ -28,6 +29,7 @@ then
 else
   EXCLUSION_FILE_COMMAND=""
 fi
+set -u
 
 
 #----------------------------------------------#
