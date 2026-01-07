@@ -25,9 +25,9 @@ set +u
 # check if there is an exclusion file, if so change the parameter
 if [ ! -z "${irods_input_sequencing__run_id}" ] && [ -f "/data/BioGrid/NGSlab/sample_sheets/${irods_input_sequencing__run_id}.exclude" ]
 then
-  EXCLUSION_FILE_COMMAND="-ex /data/BioGrid/NGSlab/sample_sheets/${irods_input_sequencing__run_id}.exclude"
+  EXCLUSION_FILE="/data/BioGrid/NGSlab/sample_sheets/${irods_input_sequencing__run_id}.exclude"
 else
-  EXCLUSION_FILE_COMMAND=""
+  EXCLUSION_FILE=""
 fi
 set -u
 
@@ -101,29 +101,44 @@ esac
 
 set -euo pipefail
 
-ARGS=
-# ...existing code...
 
-if [ ! -z "${PREVIOUS_RUN}" ] ; then
-    echo "Using previous clustering run: ${PREVIOUS_RUN}"
-    python juno_clustering.py \
-        --queue "${QUEUE}" \
-        -i "${input_dir}" \
-        -o "${output_dir}" \
-        --clustering-preset "${TYPE}" \
-        --previous-clustering "${PREVIOUS_RUN}" \
-        "${EXCLUSION_FILE_COMMAND}"
+if [ "${EXCLUSION_FILE}" == "" ]
+then
+    if [ ! -z "${PREVIOUS_RUN}" ] ; then
+        echo "Using previous clustering run: ${PREVIOUS_RUN}"
+        python juno_clustering.py \
+            --queue "${QUEUE}" \
+            -i "${input_dir}" \
+            -o "${output_dir}" \
+            --clustering-preset "${TYPE}" \
+            --previous-clustering "${PREVIOUS_RUN}" \           
+    else
+        python juno_clustering.py \
+            --queue "${QUEUE}" \
+            -i "${input_dir}" \
+            -o "${output_dir}" \
+            --clustering-preset "${TYPE}" \
+            
+    fi
 else
-    python juno_clustering.py \
-        --queue "${QUEUE}" \
-        -i "${input_dir}" \
-        -o "${output_dir}" \
-        --clustering-preset "${TYPE}" \
-        "${EXCLUSION_FILE_COMMAND}"
+    if [ ! -z "${PREVIOUS_RUN}" ] ; then
+        echo "Using previous clustering run: ${PREVIOUS_RUN}"
+        python juno_clustering.py \
+            --queue "${QUEUE}" \
+            -i "${input_dir}" \
+            -o "${output_dir}" \
+            --clustering-preset "${TYPE}" \
+            --previous-clustering "${PREVIOUS_RUN}" \
+            -ex "${EXCLUSION_FILE}"
+    else
+        python juno_clustering.py \
+            --queue "${QUEUE}" \
+            -i "${input_dir}" \
+            -o "${output_dir}" \
+            --clustering-preset "${TYPE}" \
+            -ex "${EXCLUSION_FILE}"
+    fi
 fi
-
-result=$?
-# ...existing code...
 
 result=$?
 
