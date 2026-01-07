@@ -60,12 +60,19 @@ def collfinder():
             sys.stderr.write('Attribute {} missing on collection {}\n'.format(attr, args.input_collection))
             return False
 
-    # Get run number from input
-    run_number = input_meta.get(args.run_number_attr, None)
+    # # Get run number from input
+    # run_number = input_meta.get(args.run_number_attr, None)
+    # if run_number is None:
+    #     sys.stderr.write('Attribute {} not found on collection {}\n'.format(args.run_number_attr, args.input_collection))
+    #     return False
+    # run_number = int(run_number)
+
+    # Get run number from input (collection timestamp)
+    run_number = input_meta.get(args.run_number_attr, None) #using the run time stamp as run number
     if run_number is None:
         sys.stderr.write('Attribute {} not found on collection {}\n'.format(args.run_number_attr, args.input_collection))
         return False
-    run_number = int(run_number)
+    run_number = int(float(run_number)) #to truncate decimal part if timestamp is float
 
 
     # Difficult to match to multiple AVUs in one query. Start with first match attribute
