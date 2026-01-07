@@ -124,7 +124,7 @@ def collfinder():
     for c in result_set:
         if result_set[c]:
             if args.run_number_attr in result_set[c]:
-                current_run_number = int(result_set[c][args.run_number_attr])
+                current_run_number = int(float(result_set[c][args.run_number_attr])) #to truncate decimal part if timestamp is float
                 if current_run_number<run_number and current_run_number>run_number_found:
                     previous_collection = c
                     run_number_found = current_run_number
