@@ -111,13 +111,13 @@ then
             -i "${input_dir}" \
             -o "${output_dir}" \
             --clustering-preset "${TYPE}" \
-            --previous-clustering "${PREVIOUS_RUN}" \           
+            --previous-clustering "${PREVIOUS_RUN}"            
     else
         python juno_clustering.py \
             --queue "${QUEUE}" \
             -i "${input_dir}" \
             -o "${output_dir}" \
-            --clustering-preset "${TYPE}" \
+            --clustering-preset "${TYPE}" 
             
     fi
 else
