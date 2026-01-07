@@ -64,7 +64,7 @@ conda activate collfinder_env
 PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -i ${irods_runsheet_sys__runsheet__input_collection} \
     -m projectID \
-    -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/Juno_clustering" \
+    -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/juno-clustering.git" \
     -x "sys::data::state=valid" \
     -r import_timestamp \
     -X "sys::data::state=invalid")
