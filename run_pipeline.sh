@@ -62,7 +62,7 @@ conda activate collfinder_env
 
 # Run collfinder.py in subshell
 PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
-    -i "$input_dir" \
+    -i ${irods_runsheet_sys__runsheet__input_collection} \
     -m projectID \
     -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/Juno_clustering" \
     -x "sys::data::state=valid" \
