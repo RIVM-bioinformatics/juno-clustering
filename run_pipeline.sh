@@ -61,11 +61,11 @@ mamba env create -f envs/collfinder.yaml --name collfinder_env
 conda activate collfinder_env
 
 # Run collfinder.py in subshell
-PREVIOUS_RUN = $( python workflow/scripts/collfinder.py
-    -i "$input_dir"
-    -m projectID
-    -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/Juno_clustering"
-    -x "sys::data::state=valid"
+PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
+    -i "$input_dir" \
+    -m projectID \
+    -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/Juno_clustering" \
+    -x "sys::data::state=valid" \
     -r import_timestamp)
 
 conda deactivate
@@ -100,13 +100,29 @@ esac
 
 set -euo pipefail
 
-python juno_clustering.py \
-    --queue "${QUEUE}" \
-    -i "${input_dir}" \
-    -o "${output_dir}" \
-    --clustering-preset "${TYPE}" \
-    --previous-clustering "${PREVIOUS_RUN}" \
-    "${EXCLUSION_FILE_COMMAND}"
+ARGS=
+# ...existing code...
+
+if [ ! -z "${PREVIOUS_RUN}" ] ; then
+    echo "Using previous clustering run: ${PREVIOUS_RUN}"
+    python juno_clustering.py \
+        --queue "${QUEUE}" \
+        -i "${input_dir}" \
+        -o "${output_dir}" \
+        --clustering-preset "${TYPE}" \
+        --previous-clustering "${PREVIOUS_RUN}" \
+        "${EXCLUSION_FILE_COMMAND}"
+else
+    python juno_clustering.py \
+        --queue "${QUEUE}" \
+        -i "${input_dir}" \
+        -o "${output_dir}" \
+        --clustering-preset "${TYPE}" \
+        "${EXCLUSION_FILE_COMMAND}"
+fi
+
+result=$?
+# ...existing code...
 
 result=$?
 
