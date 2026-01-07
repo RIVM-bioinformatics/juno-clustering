@@ -59,12 +59,12 @@ mamba env create -f envs/collfinder.yaml --name collfinder_env
 conda activate collfinder_env
 
 # Run collfinder.py in subshell
-PREVIOUS_RUN = $( python collfinder.py
+PREVIOUS_RUN = $( python workflow/scripts/collfinder.py
     -i "$input_dir"
     -m projectID
     -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/Juno_clustering"
     -x "sys::data::state=valid"
-    -r import_timestamp )
+    -r import_timestamp)
 
 conda deactivate
 
