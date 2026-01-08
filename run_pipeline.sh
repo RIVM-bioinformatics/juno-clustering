@@ -67,7 +67,7 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/juno-clustering.git" \
     -x "sys::data::state=valid" \
     -r import_timestamp \
-    -X "sys::data::state=invalid" \
+    -X "user::data::state=invalid" \
     -l collfinder.log)
 
 conda deactivate
