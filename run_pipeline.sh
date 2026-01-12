@@ -70,6 +70,9 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -X "user::data::state=invalid" \
     -l collfinder.log)
 
+iget -r -v ${PREVIOUS_RUN}
+
+l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
 conda deactivate
     
 #----------------------------------------------#
@@ -112,7 +115,7 @@ then
             -i "${input_dir}" \
             -o "${output_dir}" \
             --clustering-preset "${TYPE}" \
-            --previous-clustering "${PREVIOUS_RUN}"            
+            --previous-clustering "${l_previous_run}"            
     else
         python juno_clustering.py \
             --queue "${QUEUE}" \
@@ -129,7 +132,7 @@ else
             -i "${input_dir}" \
             -o "${output_dir}" \
             --clustering-preset "${TYPE}" \
-            --previous-clustering "${PREVIOUS_RUN}" \
+            --previous-clustering "${l_previous_run}" \
             -ex "${EXCLUSION_FILE}"
     else
         python juno_clustering.py \
