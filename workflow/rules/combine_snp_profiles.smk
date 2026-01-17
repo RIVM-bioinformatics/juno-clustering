@@ -1,5 +1,5 @@
 # TODO: Add per sample output for juno-cgmlst which can be listed by juno-library
-
+import json
 
 # Copy assemblies to a temporary directory in the output directory
 # This is needed because pyfastx makes index files in the input directory which is not permitted by default on iRODS
@@ -22,7 +22,7 @@ if PREVIOUS_CLUSTERING == "None":
 
     rule combine_snp_profiles_from_scratch:
         input:
-            OUT + "/assemblies",
+            assemblies=OUT + "/assemblies",
         output:
             aln=temp(OUT + "/aln.fa"),
             index=temp(OUT + "/aln.fa.fxi"),
@@ -38,13 +38,17 @@ if PREVIOUS_CLUSTERING == "None":
             "docker://ghcr.io/boasvdp/juno_clustering_scripts:0.2"
         params:
             N_content_threshold=config["N_content_threshold"],
+            sample_date_map=json.dumps(SAMPLE_DATE_MAP),
+            inclusion_pattern=config["inclusion_pattern"],
         threads: config["threads"]["compression"]
         shell:
             """
 python workflow/scripts/add_to_alignment.py \
 --output {output.aln} \
 --N-content-threshold {params.N_content_threshold} \
---new-input {input}/* 2>&1> {log}
+--new-input {input.assemblies}/* \
+--sample-date-map '{params.sample_date_map}' \
+2>&1> {log}
             """
 
 else:
@@ -95,6 +99,8 @@ pigz \
             "docker://ghcr.io/boasvdp/juno_clustering_scripts:0.2"
         params:
             N_content_threshold=config["N_content_threshold"],
+            sample_date_map=json.dumps(SAMPLE_DATE_MAP),
+            inclusion_pattern=config["inclusion_pattern"],
         threads: config["threads"]["compression"]
         shell:
             """
@@ -102,7 +108,9 @@ python workflow/scripts/add_to_alignment.py \
 --previous-aln {input.previous_aln} \
 --output {output.aln} \
 --N-content-threshold {params.N_content_threshold} \
---new-input {input.assembly_dir}/* 2>&1> {log}
+--new-input {input.assembly_dir}/* \
+--sample-date-map '{params.sample_date_map}' \
+2>&1> {log}
             """
 
 

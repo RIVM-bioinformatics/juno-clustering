@@ -4,6 +4,7 @@ from pathlib import Path
 import pandas as pd
 import datetime
 import logging
+import re
 
 
 def read_input_data(input_files):
@@ -35,7 +36,6 @@ def read_previous_exclude_list(file):
         df = pd.read_csv(file, sep="\t")
         return df
 
-
 def main(args):
     df = read_input_data(args.input)
     df_coverage_excluded = exclude_on_coverage(df, args.coverage_threshold)
@@ -49,9 +49,21 @@ def main(args):
         ]
     )
     df_excluded["date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    def format_sample(sample):
+        prefix = sample.split("_")[0]
+        date = sample_date_map.get(prefix)
+        return f"{prefix}_{date}"
+    
+
+    df_excluded["sample"] = df_excluded["sample"].apply(format_sample)
+    print(df_excluded)
+
     df_previous_excluded = read_previous_exclude_list(args.previous_exclude_list)
     df_final = pd.concat([df_previous_excluded, df_excluded])
     df_final.to_csv(args.output, sep="\t", index=False)
+
+
 
 
 if __name__ == "__main__":
@@ -62,7 +74,14 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--inclusion-pattern", type=str, required=True)
     parser.add_argument("--coverage-threshold", type=float, required=True)
+    parser.add_argument("--sample-date-map", type=str, required=False)
 
     args = parser.parse_args()
 
+    # # Parse sample_date_map if provided
+    if args.sample_date_map:
+        sample_date_map = json.loads(args.sample_date_map)
+    else:
+        sample_date_map = {}
+    
     main(args)

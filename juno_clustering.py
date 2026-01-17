@@ -62,6 +62,13 @@ class JunoClustering(Pipeline):
             help="Separator for merged cluster names.",
             default="|",
         )
+        self.add_argument(
+            "--tsv",
+            type=Path,
+            required=False,
+            metavar="STR",
+            help="Path to a TSV file to append dates to sample names.",
+        )
 
     def _parse_args(self) -> argparse.Namespace:
         args = super()._parse_args()
@@ -72,6 +79,7 @@ class JunoClustering(Pipeline):
         self.presets_path: Optional[Path] = args.presets_path
         self.merged_cluster_separator: str = args.merged_cluster_separator
         self.clustering_preset: str = args.clustering_preset
+        self.tsv: Optional[Path] = args.tsv
 
         return args
 
@@ -107,6 +115,7 @@ class JunoClustering(Pipeline):
             "N_content_threshold": str(self.N_content_threshold),  # from presets
             "coverage_threshold": str(self.coverage_threshold),  # from presets
             "inclusion_pattern": str(self.inclusion_pattern),  # from presets
+            "tsv": str(self.tsv) if self.tsv else None,
         }
 
     def set_presets(self) -> None:
