@@ -175,7 +175,10 @@ def rename_fasta_headers_with_date(fasta_path: Path, sample_date_map: dict):
                 if m:
                     sample = m.group(1)
                     rest = m.group(2)
-                    sample_prefix = sample.split("_")[0]
+                    if sample == "WGS_controle":
+                        sample_prefix = sample
+                    else:
+                        sample_prefix = sample.split("_")[0]
                     date = sample_date_map.get(sample_prefix)
                     if date:
                         new_header = f">{sample_prefix}_{date} {rest}\n"

@@ -52,6 +52,11 @@ def main(args):
 
     def format_sample(sample):
         prefix = sample.split("_")[0]
+        if sample == "WGS_controle":
+            prefix = sample
+        else:
+            prefix = sample.split("_")[0]
+                   
         date = sample_date_map.get(prefix)
         return f"{prefix}_{date}"
     
