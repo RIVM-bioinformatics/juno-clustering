@@ -70,9 +70,16 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -X "user::data::state=invalid" \
     -l collfinder.log)
 
-iget -r -v ${PREVIOUS_RUN}
+if [ -z "${PREVIOUS_RUN}" ] ; then
+    PREVIOUS_RUN=""
+    echo "No previous clustering run found."
+else
+    iget -r -v ${PREVIOUS_RUN}
+    l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
+fi
 
-l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
+
+
 conda deactivate
     
 #----------------------------------------------#
@@ -115,13 +122,15 @@ then
             -i "${input_dir}" \
             -o "${output_dir}" \
             --clustering-preset "${TYPE}" \
-            --previous-clustering "${l_previous_run}"            
+            --previous-clustering "${l_previous_run}" \
+            --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}"           
     else
         python juno_clustering.py \
             --queue "${QUEUE}" \
             -i "${input_dir}" \
             -o "${output_dir}" \
-            --clustering-preset "${TYPE}" 
+            --clustering-preset "${TYPE}" \
+            --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" 
             
     fi
 else
@@ -133,14 +142,16 @@ else
             -o "${output_dir}" \
             --clustering-preset "${TYPE}" \
             --previous-clustering "${l_previous_run}" \
-            -ex "${EXCLUSION_FILE}"
+            -ex "${EXCLUSION_FILE}" \
+            --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" 
     else
         python juno_clustering.py \
             --queue "${QUEUE}" \
             -i "${input_dir}" \
             -o "${output_dir}" \
             --clustering-preset "${TYPE}" \
-            -ex "${EXCLUSION_FILE}"
+            -ex "${EXCLUSION_FILE}" \
+            --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}"
     fi
 fi
 

@@ -23,33 +23,16 @@ if PREVIOUS_CLUSTERING == "None":
     Path(OUT).mkdir(parents=True, exist_ok=True)
     Path(OUT + "/previous_list_excluded_samples.txt").touch()
 
-#to append a date to sample names
-# DATE_APPEND_TSV = config["tsv"]
-
-# SAMPLE_DATE_MAP = {}
-# if DATE_APPEND_TSV is not None and str(DATE_APPEND_TSV).lower() != 'none':
-#     # TSV is provided, read sample and date columns
-#     with open(DATE_APPEND_TSV) as tsvfile:
-#         reader = csv.DictReader(tsvfile, delimiter='\t')
-#         for row in reader:
-#             sample = row.get('sample')
-#             date = row.get('date')
-#             if sample and date:
-#                 SAMPLE_DATE_MAP[sample] = date
-#     SAMPLES_LIST = list(SAMPLE_DATE_MAP.keys())
-# else:
-#     # No TSV, use input path for date and SAMPLES for samples
-#     input_basename = os.path.basename(INPUT.rstrip('/'))
-#     date = input_basename[:6]
-#     SAMPLES_LIST = list(SAMPLES.keys()) if isinstance(SAMPLES, dict) else SAMPLES
-#     for sample in SAMPLES_LIST:
-#         SAMPLE_DATE_MAP[sample] = date
-
 DATE_APPEND_TSV = config["tsv"]
+INPUT_COLLECTION_NAME = config["input_collection_name"]
 
 SAMPLE_DATE_MAP = {}
-input_basename = os.path.basename(INPUT.rstrip('/'))
-default_date = input_basename[:6]
+if INPUT_COLLECTION_NAME is not None and str(INPUT_COLLECTION_NAME).lower() != 'none':
+    input_basename = INPUT_COLLECTION_NAME.strip('/')
+    default_date = input_basename[:6]
+else:
+    input_basename = os.path.basename(INPUT.rstrip('/'))
+    default_date = input_basename[:6]
 SAMPLES_LIST = list(SAMPLES.keys()) if isinstance(SAMPLES, dict) else SAMPLES
 
 if DATE_APPEND_TSV is not None and str(DATE_APPEND_TSV).lower() != 'none':

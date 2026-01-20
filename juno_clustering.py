@@ -69,6 +69,15 @@ class JunoClustering(Pipeline):
             metavar="STR",
             help="Path to a TSV file to append dates to sample names.",
         )
+        self.add_argument(
+            "--input-collection-name",
+            type=str,
+            required=False,
+            metavar="STR",
+            help="Name of input collection.",
+        )
+        
+
 
     def _parse_args(self) -> argparse.Namespace:
         args = super()._parse_args()
@@ -80,6 +89,7 @@ class JunoClustering(Pipeline):
         self.merged_cluster_separator: str = args.merged_cluster_separator
         self.clustering_preset: str = args.clustering_preset
         self.tsv: Optional[Path] = args.tsv
+        self.input_collection_name: Optional[str] = args.input_collection_name
 
         return args
 
@@ -115,7 +125,8 @@ class JunoClustering(Pipeline):
             "N_content_threshold": str(self.N_content_threshold),  # from presets
             "coverage_threshold": str(self.coverage_threshold),  # from presets
             "inclusion_pattern": str(self.inclusion_pattern),  # from presets
-            "tsv": str(self.tsv) if self.tsv else None,
+            "tsv": str(self.tsv),
+            "input_collection_name": str(self.input_collection_name),
         }
 
     def set_presets(self) -> None:
