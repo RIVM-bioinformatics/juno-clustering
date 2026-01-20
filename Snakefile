@@ -28,7 +28,7 @@ INPUT_COLLECTION_NAME = config["input_collection_name"]
 
 SAMPLE_DATE_MAP = {}
 if INPUT_COLLECTION_NAME is not None and str(INPUT_COLLECTION_NAME).lower() != 'none':
-    input_basename = INPUT_COLLECTION_NAME.strip('/')
+    input_basename = INPUT_COLLECTION_NAME.strip('/').split('/')[-1]
     default_date = input_basename[:6]
 else:
     input_basename = os.path.basename(INPUT.rstrip('/'))
