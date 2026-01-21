@@ -70,10 +70,7 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -X "user::data::state=invalid" \
     -l collfinder.log)
 
-if [ -z "${PREVIOUS_RUN}" ] ; then
-    PREVIOUS_RUN=""
-    echo "No previous clustering run found."
-else
+if [ ! -z "${PREVIOUS_RUN}" ] ; then
     iget -r -v ${PREVIOUS_RUN}
     l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
 fi
