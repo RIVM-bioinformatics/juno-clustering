@@ -18,6 +18,7 @@ INPUT = config["input_dir"]
 # find collection using collfinder
 # iget collection and save to a path passed to cli
 PREVIOUS_CLUSTERING = config["previous_clustering"]
+print("Previous clustering collection:", PREVIOUS_CLUSTERING)
 
 if PREVIOUS_CLUSTERING == "None":
     Path(OUT).mkdir(parents=True, exist_ok=True)
