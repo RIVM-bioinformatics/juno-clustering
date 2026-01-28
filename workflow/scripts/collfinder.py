@@ -135,8 +135,11 @@ def collfinder():
                 continue
             for c in result_set:
                 if not result_set[c]:
+                    # print(f'input_collection: {c}, result: {result_set[c]}')
+                    # print(result_set[c])
                     continue
                 if result_set[c].get(attr) == value:
+                    # print(f'input_collection: {c}, value: {value}')
                     result_set[c] = None
                     continue
 
@@ -151,7 +154,8 @@ def collfinder():
                     except Exception as e:
                         logging.warning('Failed to convert run number for collection %s: %s', c, str(e))
                         continue
-                    if current_run_number < run_number and current_run_number > run_number_found:
+                    # if current_run_number < run_number and current_run_number > run_number_found:
+                    if current_run_number > run_number_found: #if current input collection timestamp is later than previous found timestamp
                         previous_collection = c
                         run_number_found = current_run_number
 

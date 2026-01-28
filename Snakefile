@@ -52,7 +52,7 @@ if DATE_APPEND_TSV is not None and str(DATE_APPEND_TSV).lower() != 'none':
 else:
     for sample in SAMPLES_LIST:
         SAMPLE_DATE_MAP[sample] = default_date
-print("Sample to Date Mapping:", SAMPLE_DATE_MAP)
+# print("Sample to Date Mapping:", SAMPLE_DATE_MAP)
 
 # Configure pipeline outputs
 expected_outputs = []

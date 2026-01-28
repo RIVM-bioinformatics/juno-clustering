@@ -61,6 +61,7 @@ mamba env create -f envs/collfinder.yaml --name collfinder_env
 conda activate collfinder_env
 
 # Run collfinder.py in subshell
+set -x
 PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -i ${irods_runsheet_sys__runsheet__input_collection} \
     -m projectID \
