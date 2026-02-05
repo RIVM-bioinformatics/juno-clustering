@@ -111,47 +111,25 @@ esac
 set -euo pipefail
 
 
-if [ "${EXCLUSION_FILE}" == "" ]
-then
-    if [ ! -z "${PREVIOUS_RUN}" ] ; then
-        echo "Using previous clustering run: ${PREVIOUS_RUN}"
-        python juno_clustering.py \
-            --queue "${QUEUE}" \
-            -i "${input_dir}" \
-            -o "${output_dir}" \
-            --clustering-preset "${TYPE}" \
-            --previous-clustering "${l_previous_run}" \
-            --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}"           
-    else
-        python juno_clustering.py \
-            --queue "${QUEUE}" \
-            -i "${input_dir}" \
-            -o "${output_dir}" \
-            --clustering-preset "${TYPE}" \
-            --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" 
-            
-    fi
+if [ ! -z "${PREVIOUS_RUN}" ] ; then
+    echo "Using previous clustering run: ${PREVIOUS_RUN}"
+    python juno_clustering.py \
+        --queue "${QUEUE}" \
+        -i "${input_dir}" \
+        -o "${output_dir}" \
+        --clustering-preset "${TYPE}" \
+        --previous-clustering "${l_previous_run}" \
+        --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}"           
 else
-    if [ ! -z "${PREVIOUS_RUN}" ] ; then
-        echo "Using previous clustering run: ${PREVIOUS_RUN}"
-        python juno_clustering.py \
-            --queue "${QUEUE}" \
-            -i "${input_dir}" \
-            -o "${output_dir}" \
-            --clustering-preset "${TYPE}" \
-            --previous-clustering "${l_previous_run}" \
-            -ex "${EXCLUSION_FILE}" \
-            --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" 
-    else
-        python juno_clustering.py \
-            --queue "${QUEUE}" \
-            -i "${input_dir}" \
-            -o "${output_dir}" \
-            --clustering-preset "${TYPE}" \
-            -ex "${EXCLUSION_FILE}" \
-            --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}"
-    fi
+    python juno_clustering.py \
+        --queue "${QUEUE}" \
+        -i "${input_dir}" \
+        -o "${output_dir}" \
+        --clustering-preset "${TYPE}" \
+        --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" 
+        
 fi
+
 
 result=$?
 
