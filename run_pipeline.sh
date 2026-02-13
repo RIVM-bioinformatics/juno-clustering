@@ -130,7 +130,7 @@ python juno_clustering.py \
     -i "${input_dir}" \
     -o "${output_dir}" \
     --clustering-preset "${TYPE}" \
-    --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" 
+
         
 # fi
 
