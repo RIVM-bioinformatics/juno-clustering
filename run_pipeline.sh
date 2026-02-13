@@ -121,6 +121,10 @@ set -euo pipefail
 #         --previous-clustering "${l_previous_run}" \
 #         --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}"           
 # else
+
+python rename_files.py \
+    -i "${input_dir}" \
+    
 python juno_clustering.py \
     --queue "${QUEUE}" \
     -i "${input_dir}" \
