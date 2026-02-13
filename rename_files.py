@@ -31,9 +31,12 @@ def main():
     # create folders to store the data
     fasta_folder.mkdir(parents=True, exist_ok=True)
     json_folder.mkdir(parents=True, exist_ok=True)
+    dir_length = len(input_dir.parts)
     
+    paths = list(input_dir.rglob("*"))
+        
     # move and rename files
-    for path in input_dir.rglob("*"):
+    for path in paths:
         
         if path.is_file():
             new_folder = path.parent
@@ -43,15 +46,17 @@ def main():
             if path.suffix == '.json':
                 new_folder = json_folder
             
-            # only move and rename fasta and json files from old folder 
-            if len(path.parts) > 4 and path.suffix in ['.fasta', '.json']:
+            # only move and rename fasta and json files from old folder, so exclude the newly created ones
+            if path.parts[1] != 'mtb_typing' and path.suffix in ['.fasta', '.json']:
                 # determine collection name
-                name_extension = path.parts[4]
+                name_extension = path.parts[dir_length + 3]
                 # append collection name to file name
                 new_name = f'{path.stem}_{name_extension}{path.suffix}'
                 new_path = new_folder / new_name
                 # move and rename file
                 path.rename(new_path)
+                
+                print(f'Moved {path} to {new_path}')
        
 if __name__ == "__main__":
     main()
