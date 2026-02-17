@@ -16,6 +16,25 @@ def parse_args():
 
     return parser.parse_args()
 
+
+def rewrite_fasta_header(src: Path, dst: Path) -> None:
+    new_id = dst.stem  # or src.stem — choose intentionally
+
+    with src.open() as fin, dst.open("w") as fout:
+        header = fin.readline()
+
+        if not header.startswith(">"):
+            raise ValueError("FASTA file does not start with a header")
+
+        parts = header[1:].strip().split(maxsplit=1)
+        rest = f" {parts[1]}" if len(parts) > 1 else ""
+
+        fout.write(f">{new_id}{rest}\n")
+
+        # copy the remainder verbatim
+        fout.writelines(fin)
+
+
 def main():
     args = parse_args()
 
@@ -53,8 +72,13 @@ def main():
                 # append collection name to file name
                 new_name = f'{path.stem}_{name_extension}{path.suffix}'
                 new_path = new_folder / new_name
-                # move and rename file
-                path.rename(new_path)
+                
+                # rewrite fasta header to correspond with file name and move file
+                if path.suffix == '.fasta':
+                    rewrite_fasta_header(path, new_path)
+                # move and rename json file
+                if path.suffix == '.json':
+                    path.rename(new_path)
                 
                 print(f'Moved {path} to {new_path}')
        
