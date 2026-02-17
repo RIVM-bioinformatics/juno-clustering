@@ -125,7 +125,7 @@ set -euo pipefail
 python rename_files.py \
     -i "${input_dir}" \
     
-sudo chown -R svc-sscc-ira1:g-fun-iroda_myco "${input_dir}"
+chown -R svc-sscc-ira1:g-fun-iroda_myco "${input_dir}"
 
 python juno_clustering.py \
     --queue "${QUEUE}" \
@@ -134,7 +134,6 @@ python juno_clustering.py \
     --clustering-preset "${TYPE}" \
       
 # fi
-
 
 result=$?
 
