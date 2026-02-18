@@ -46,10 +46,12 @@ def main():
     # define new folders
     fasta_folder = input_dir / "mtb_typing" / "consensus"
     json_folder = input_dir / "mtb_typing" / "seq_exp_json"
+    audit_trail = input_dir / "audit_trail"
     
     # create folders to store the data
-    fasta_folder.mkdir(parents=False, mode=755, exist_ok=True)
-    json_folder.mkdir(parents=False, mode=755, exist_ok=True)
+    fasta_folder.mkdir(parents=True, exist_ok=True)
+    json_folder.mkdir(parents=True, exist_ok=True)
+    audit_trail.mkdir(parents=True, exist_ok=True)
     dir_length = len(input_dir.parts)
     
     paths = list(input_dir.rglob("*"))
