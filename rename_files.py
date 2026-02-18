@@ -48,8 +48,8 @@ def main():
     json_folder = input_dir / "mtb_typing" / "seq_exp_json"
     
     # create folders to store the data
-    fasta_folder.mkdir(parents=True, exist_ok=True)
-    json_folder.mkdir(parents=True, exist_ok=True)
+    fasta_folder.mkdir(parents=False, mode=755 exist_ok=True)
+    json_folder.mkdir(parents=False, mode=755, exist_ok=True)
     dir_length = len(input_dir.parts)
     
     paths = list(input_dir.rglob("*"))
