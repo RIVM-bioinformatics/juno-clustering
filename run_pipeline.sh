@@ -57,28 +57,28 @@ export -f __conda_hashr
 #----------------------------------------------#
 ## Run collfinder to get previous clustering run
 
-mamba env create -f envs/collfinder.yaml --name collfinder_env
-conda activate collfinder_env
+# mamba env create -f envs/collfinder.yaml --name collfinder_env
+# conda activate collfinder_env
 
-# Run collfinder.py in subshell
-set -x
-PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
-    -i ${irods_runsheet_sys__runsheet__input_collection} \
-    -m projectID \
-    -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/juno-clustering.git" \
-    -x "sys::data::state=valid" \
-    -r import_timestamp \
-    -X "user::data::state=invalid" \
-    -l collfinder.log)
+# # Run collfinder.py in subshell
+# set -x
+# PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
+#     -i ${irods_runsheet_sys__runsheet__input_collection} \
+#     -m projectID \
+#     -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/juno-clustering.git" \
+#     -x "sys::data::state=valid" \
+#     -r import_timestamp \
+#     -X "user::data::state=invalid" \
+#     -l collfinder.log)
 
-if [ ! -z "${PREVIOUS_RUN}" ] ; then
-    iget -r -v ${PREVIOUS_RUN}
-    l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
-fi
+# if [ ! -z "${PREVIOUS_RUN}" ] ; then
+#     iget -r -v ${PREVIOUS_RUN}
+#     l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
+# fi
 
 
 
-conda deactivate
+# conda deactivate
     
 #----------------------------------------------#
 # Install pipeline conda env
