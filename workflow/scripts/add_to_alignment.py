@@ -155,44 +155,44 @@ def check_names_in_fa(fasta_path: Path, list_names: List[str]) -> None:
         logging.info(f"All names found in {fasta_path}.")
 
 
-def rename_fasta_headers_with_date(fasta_path: Path, sample_date_map: dict):
-    """
-    Rename fasta headers by appending date from sample_date_map to sample name.
+# def rename_fasta_headers_with_date(fasta_path: Path, sample_date_map: dict):
+#     """
+#     Rename fasta headers by appending date from sample_date_map to sample name.
 
-    Parameters
-    ----------
-    fasta_path : Path
-        Path to the fasta file.
-    sample_date_map : dict
-        Mapping from sample name to date.
-    """
-    temp_path = fasta_path.with_suffix(".tmp")
-    pattern = re.compile(r"^>(\S+)\s(.*)$")
-    with open(fasta_path, "r") as infile, open(temp_path, "w") as outfile:
-        for line in infile:
-            if line.startswith(">"):
-                m = pattern.match(line)
-                if m:
-                    sample = m.group(1)
-                    rest = m.group(2)
-                    if sample == "WGS_controle":
-                        sample_prefix = sample
-                    else:
-                        sample_prefix = sample.split("_")[0]
-                    date = sample_date_map.get(sample_prefix)
-                    if date:
-                        new_header = f">{sample_prefix}_{date} {rest}\n"
-                        outfile.write(new_header)
-                    else:
-                        outfile.write(line)
-                else:
-                    outfile.write(line)
-            else:
-                outfile.write(line)
-    fasta_path.unlink()
-    temp_path.rename(fasta_path)
+#     Parameters
+#     ----------
+#     fasta_path : Path
+#         Path to the fasta file.
+#     sample_date_map : dict
+#         Mapping from sample name to date.
+#     """
+#     temp_path = fasta_path.with_suffix(".tmp")
+#     pattern = re.compile(r"^>(\S+)\s(.*)$")
+#     with open(fasta_path, "r") as infile, open(temp_path, "w") as outfile:
+#         for line in infile:
+#             if line.startswith(">"):
+#                 m = pattern.match(line)
+#                 if m:
+#                     sample = m.group(1)
+#                     rest = m.group(2)
+#                     if sample == "WGS_controle":
+#                         sample_prefix = sample
+#                     else:
+#                         sample_prefix = sample.split("_")[0]
+#                     date = sample_date_map.get(sample_prefix)
+#                     if date:
+#                         new_header = f">{sample_prefix}_{date} {rest}\n"
+#                         outfile.write(new_header)
+#                     else:
+#                         outfile.write(line)
+#                 else:
+#                     outfile.write(line)
+#             else:
+#                 outfile.write(line)
+#     fasta_path.unlink()
+#     temp_path.rename(fasta_path)
 
-def main(args, sample_date_map=None) -> None:
+def main(args) -> None:
     if args.previous_aln:
         list_previous_names = read_names_previous_aln(args.previous_aln)
         shutil.copyfile(args.previous_aln, args.output)
@@ -207,8 +207,8 @@ def main(args, sample_date_map=None) -> None:
     check_names_in_fa(args.output, list_previous_names + list_new_names)
 
     # Rename headers if mapping is provided
-    if sample_date_map:
-        rename_fasta_headers_with_date(args.output, sample_date_map)
+    # if sample_date_map:
+    #     rename_fasta_headers_with_date(args.output, sample_date_map)
 
 if __name__ == "__main__":
     import argparse
@@ -250,13 +250,13 @@ if __name__ == "__main__":
         action="store_true",
         help="Increase verbosity.",
     )
-    parser.add_argument(
-        "--sample-date-map",
-        type=str,
-        metavar="STR",
-        help="Dict with sample-to-date mapping.",
-        required=False,
-    )
+    # parser.add_argument(
+    #     "--sample-date-map",
+    #     type=str,
+    #     metavar="STR",
+    #     help="Dict with sample-to-date mapping.",
+    #     required=False,
+    # )
 
     args = parser.parse_args()
 
@@ -283,11 +283,11 @@ if __name__ == "__main__":
             format="%(asctime)s - %(levelname)s - %(message)s",
         )
     # Parse sample_date_map if provided
-    if args.sample_date_map:
-        sample_date_map = json.loads(args.sample_date_map)
-    else:
-        sample_date_map = None
+    # if args.sample_date_map:
+    #     sample_date_map = json.loads(args.sample_date_map)
+    # else:
+    #     sample_date_map = None
 
-    main(args, sample_date_map=sample_date_map)
+    # main(args, sample_date_map=sample_date_map)
 
-    # main(args)
+    main(args)

@@ -38,7 +38,7 @@ if PREVIOUS_CLUSTERING == "None":
             "docker://ghcr.io/boasvdp/juno_clustering_scripts:0.2"
         params:
             N_content_threshold=config["N_content_threshold"],
-            sample_date_map=json.dumps(SAMPLE_DATE_MAP),
+            # sample_date_map=json.dumps(SAMPLE_DATE_MAP),
             inclusion_pattern=config["inclusion_pattern"],
         threads: config["threads"]["compression"]
         shell:
@@ -47,7 +47,6 @@ python workflow/scripts/add_to_alignment.py \
 --output {output.aln} \
 --N-content-threshold {params.N_content_threshold} \
 --new-input {input.assemblies} \
---sample-date-map '{params.sample_date_map}' \
 2>&1> {log}
             """
 
@@ -99,7 +98,7 @@ pigz \
             "docker://ghcr.io/boasvdp/juno_clustering_scripts:0.2"
         params:
             N_content_threshold=config["N_content_threshold"],
-            sample_date_map=json.dumps(SAMPLE_DATE_MAP),
+            # sample_date_map=json.dumps(SAMPLE_DATE_MAP),
             inclusion_pattern=config["inclusion_pattern"],
         threads: config["threads"]["compression"]
         shell:
@@ -109,7 +108,6 @@ python workflow/scripts/add_to_alignment.py \
 --output {output.aln} \
 --N-content-threshold {params.N_content_threshold} \
 --new-input {input.assembly_dir} \
---sample-date-map '{params.sample_date_map}' \
 2>&1> {log}
             """
 

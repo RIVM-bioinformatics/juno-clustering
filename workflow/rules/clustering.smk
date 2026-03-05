@@ -35,7 +35,7 @@ fi
         params:
             coverage_threshold=config["coverage_threshold"],
             inclusion_pattern=config["inclusion_pattern"],
-            sample_date_map=json.dumps(SAMPLE_DATE_MAP),
+            # sample_date_map=json.dumps(SAMPLE_DATE_MAP),
         threads: config["threads"]["compression"]
         shell:
             """
@@ -46,7 +46,6 @@ python workflow/scripts/list_excluded_samples.py \
 --output {output} \
 --inclusion-pattern {params.inclusion_pattern} \
 --coverage-threshold {params.coverage_threshold} \
---sample-date-map '{params.sample_date_map}' \
 2>&1> {log}
             """
 

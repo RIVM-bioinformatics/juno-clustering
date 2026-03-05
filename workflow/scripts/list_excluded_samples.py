@@ -50,19 +50,19 @@ def main(args):
     )
     df_excluded["date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    def format_sample(sample):
-        prefix = sample.split("_")[0]
-        if sample == "WGS_controle":
-            prefix = sample
-        else:
-            prefix = sample.split("_")[0]
+    # def format_sample(sample):
+    #     prefix = sample.split("_")[0]
+    #     if sample == "WGS_controle":
+    #         prefix = sample
+    #     else:
+    #         prefix = sample.split("_")[0]
                    
-        date = sample_date_map.get(prefix)
-        return f"{prefix}_{date}"
+    #     date = sample_date_map.get(prefix)
+    #     return f"{prefix}_{date}"
     
 
-    df_excluded["sample"] = df_excluded["sample"].apply(format_sample)
-    print(df_excluded)
+    # df_excluded["sample"] = df_excluded["sample"].apply(format_sample)
+    # print(df_excluded)
 
     df_previous_excluded = read_previous_exclude_list(args.previous_exclude_list)
     df_final = pd.concat([df_previous_excluded, df_excluded])
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--inclusion-pattern", type=str, required=True)
     parser.add_argument("--coverage-threshold", type=float, required=True)
-    parser.add_argument("--sample-date-map", type=str, required=False)
+    # parser.add_argument("--sample-date-map", type=str, required=False)
 
     args = parser.parse_args()
 
@@ -90,11 +90,11 @@ if __name__ == "__main__":
         else:
             expanded_inputs.append(p)
     args.input = expanded_inputs
-    
+
     # # Parse sample_date_map if provided
-    if args.sample_date_map:
-        sample_date_map = json.loads(args.sample_date_map)
-    else:
-        sample_date_map = {}
+    # if args.sample_date_map:
+    #     sample_date_map = json.loads(args.sample_date_map)
+    # else:
+    #     sample_date_map = {}
     
     main(args)
