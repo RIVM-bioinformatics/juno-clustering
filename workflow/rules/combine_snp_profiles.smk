@@ -46,7 +46,7 @@ if PREVIOUS_CLUSTERING == "None":
 python workflow/scripts/add_to_alignment.py \
 --output {output.aln} \
 --N-content-threshold {params.N_content_threshold} \
---new-input {input.assemblies}/* \
+--new-input {input.assemblies} \
 --sample-date-map '{params.sample_date_map}' \
 2>&1> {log}
             """
@@ -108,7 +108,7 @@ python workflow/scripts/add_to_alignment.py \
 --previous-aln {input.previous_aln} \
 --output {output.aln} \
 --N-content-threshold {params.N_content_threshold} \
---new-input {input.assembly_dir}/* \
+--new-input {input.assembly_dir} \
 --sample-date-map '{params.sample_date_map}' \
 2>&1> {log}
             """

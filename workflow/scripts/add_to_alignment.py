@@ -260,6 +260,18 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    #sohana added 050326
+    # Expand directories to files
+    expanded_new_inputs = []
+    valid_exts = {".fa", ".fasta", ".fna", ".fa.gz"}
+    for p in args.new_input:
+        if p.is_dir():
+            expanded_new_inputs.extend([f for f in p.iterdir() if f.suffix in valid_exts])
+        else:
+            if p.suffix in valid_exts:
+                expanded_new_inputs.append(p)
+    args.new_input = expanded_new_inputs
+    ###############################################
     if args.verbose:
         logging.basicConfig(
             level=logging.DEBUG,

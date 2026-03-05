@@ -17,9 +17,8 @@ fi
 
     rule list_excluded_samples:
         input:
-            seq_exp_json=expand(
-                INPUT + "/mtb_typing/seq_exp_json/{sample}.json", sample=SAMPLES
-            ),
+            seq_exp_json_dir=
+                INPUT + "/mtb_typing/seq_exp_json",
             exclude_list=OUT + "/previous_list_excluded_samples.tsv",
         output:
             OUT + "/list_excluded_samples.tsv",
@@ -42,7 +41,7 @@ fi
             """
 # columns: sample, reason, date
 python workflow/scripts/list_excluded_samples.py \
---input {input.seq_exp_json} \
+--input {input.seq_exp_json_dir} \
 --previous-exclude-list {input.exclude_list} \
 --output {output} \
 --inclusion-pattern {params.inclusion_pattern} \
