@@ -71,8 +71,6 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -l "../output/log/collfinder.log"
     )
 
-echo "previous_clustering_run: ${PREVIOUS_RUN}"
-
 # Run find_downstream_clusterfile.py in subshell
 set -x
 CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_clusterfile.py \
@@ -81,8 +79,6 @@ CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_clusterfile.p
     -X "user::data::state=invalid" \
     -l "../output/log/find_downstream_clusterfile.log"
     )
-
-echo "curated_clustering_collection: ${CURATED_CLUSTERING_COLL}"
 
 # Download the previous run collection and downstream collection containing curated cluster file
 if [ ! -z "${PREVIOUS_RUN}" ] ; then

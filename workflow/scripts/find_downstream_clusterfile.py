@@ -16,9 +16,6 @@ def parse_args():
     )
 
     parser.add_argument(
-        "-i", "--input-dir", required=True, type=Path,
-        help="Path to the input directory")
-    parser.add_argument(
             "-p", "--previous-run", required=True, type=Path,
         help="previous run clustering collection")
 
@@ -51,6 +48,8 @@ def irodsConnect(irodsfile="", use_ssl = False):
 def find_downstream_clusterfile():
     
     args = parse_args()
+    
+    previous_run = args.previous_run_clustering_collection
 
     # Set up logging
     logging.basicConfig(
@@ -62,12 +61,12 @@ def find_downstream_clusterfile():
 
     try:
         irods_session = irodsConnect(use_ssl=args.use_ssl)
-        logging.info(f"Connected to iRODS. Previous run collection: {args.previous_run_clustering_collection}")
+        logging.info(f"Connected to iRODS. Previous run collection: {previous_run}")
 
         #find dataset_id previous clustering run
         try:
             query = irods_session.query(CollectionMeta.value).filter(
-                Criterion('=', Collection.name, args.previous_run_clustering_collection)).filter(
+                Criterion('=', Collection.name, previous_run)).filter(
                 Criterion('=', CollectionMeta.name, 'sys::dataset_id'))
             dataset_id = { q[CollectionMeta.value]: None for q in query }
         except Exception as e:
@@ -81,10 +80,12 @@ def find_downstream_clusterfile():
                 Criterion('=', CollectionMeta.value, dataset_id))
                 
             downstream_coll_name = { q[Collection.name]: None for q in query }
+            
+            # This print inserts the string in the run_pipeline.sh script
             print(downstream_coll_name)
             
         except Exception as e:
-            logging.error('Error finding dataset_id previous clustering collection: %s', str(e))
+            logging.error('Error finding curated clustering collection: %s', str(e))
             return False
         
         # Check id clusters.csv exists
