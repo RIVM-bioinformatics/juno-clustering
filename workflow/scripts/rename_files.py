@@ -7,8 +7,8 @@ def rewrite_fasta_header(src: Path, dst: Path) -> None:
     '''
     change the fasta header to contain the renamed filename
     '''
-    new_id = dst.stem  # or src.stem — choose intentionally
-
+    new_id = dst.stem
+    
     with src.open() as fin, dst.open("w") as fout:
         header = fin.readline()
 
@@ -22,9 +22,12 @@ def rewrite_fasta_header(src: Path, dst: Path) -> None:
         
         logging.info(f'Replaced header in file: {dst}')
         
-        # copy the remainder verbatim
+        # copy the remainder
         fout.writelines(fin)
-
+    
+    #remove the src file
+    src.unlink()
+    
 
 def rename_files():
     '''
@@ -69,6 +72,9 @@ def rename_files():
     audit_trail.mkdir(parents=True, exist_ok=True)
     
     paths = list(input_dir.rglob("*"))
+    
+    #TODO: only defined folders
+
             
     # move and rename files
     for path in paths:
