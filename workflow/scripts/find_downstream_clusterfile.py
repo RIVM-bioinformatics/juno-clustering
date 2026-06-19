@@ -91,8 +91,14 @@ def find_downstream_clusterfile():
             downstream_coll_name = [ q[Collection.name] for q in query ][0]
             
             # This print inserts the string in the run_pipeline.sh script
-            print(downstream_coll_name)
-            
+            if downstream_coll_name is not None:
+                logging.info(f"Previous clustering run collection with curated clusters.csv: {downstream_coll_name}")
+                print(downstream_coll_name)
+            else:
+                logging.info("No collection with curated clusters.csv found.")
+                
+            return True
+        
         except Exception as e:
             logging.error('Error finding curated clustering collection: %s', str(e))
             return False
