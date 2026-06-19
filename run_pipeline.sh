@@ -74,7 +74,7 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
 # Run find_downstream_clusterfile.py in subshell
 set -x
 CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_clusterfile.py \
-    -i ${irods_runsheet_sys__runsheet__input_collection} \
+    -p ${PREVIOUS_RUN} \
     -x "sys::data::state=valid" \
     -X "user::data::state=invalid" \
     -l "../output/log/find_downstream_clusterfile.log"
