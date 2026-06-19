@@ -53,7 +53,7 @@ export -f __conda_activate
 export -f __conda_reactivate
 export -f __conda_hashr
 
-----------------------------------------------#
+#----------------------------------------------#
 # Run collfinder to get previous clustering run
 
 mamba env create -f envs/collfinder.yaml --name collfinder_env
