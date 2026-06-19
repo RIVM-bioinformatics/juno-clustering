@@ -53,32 +53,47 @@ export -f __conda_activate
 export -f __conda_reactivate
 export -f __conda_hashr
 
+----------------------------------------------#
+# Run collfinder to get previous clustering run
 
-#----------------------------------------------#
-## Run collfinder to get previous clustering run
+mamba env create -f envs/collfinder.yaml --name collfinder_env
+conda activate collfinder_env
 
-# mamba env create -f envs/collfinder.yaml --name collfinder_env
-# conda activate collfinder_env
+# Run collfinder.py in subshell
+set -x
+PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
+    -i ${irods_runsheet_sys__runsheet__input_collection} \
+    -m projectID \
+    -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/juno-clustering.git" \
+    -x "sys::data::state=valid" \
+    -r import_timestamp \
+    -X "user::data::state=invalid" \
+    -l collfinder.log)
 
-# # Run collfinder.py in subshell
-# set -x
-# PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
-#     -i ${irods_runsheet_sys__runsheet__input_collection} \
-#     -m projectID \
-#     -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/juno-clustering.git" \
-#     -x "sys::data::state=valid" \
-#     -r import_timestamp \
-#     -X "user::data::state=invalid" \
-#     -l collfinder.log)
+echo "previous_clustering_run: ${PREVIOUS_RUN}"
 
-# if [ ! -z "${PREVIOUS_RUN}" ] ; then
-#     iget -r -v ${PREVIOUS_RUN}
-#     l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
-# fi
+# Run find_downstream_clusterfile.py in subshell
+set -x
+CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_clusterfile.py \
+    -i ${irods_runsheet_sys__runsheet__input_collection} \
+    -x "sys::data::state=valid" \
+    -X "user::data::state=invalid" \
+    -l find_downstream_clusterfile.log
+    )
 
+echo "curated_clustering_collection: ${CURATED_CLUSTERING_COLL}"
 
+# Download the previous run collection and downstream collection containing curated cluster file
+if [ ! -z "${PREVIOUS_RUN}" ] ; then
+    iget -r -v ${PREVIOUS_RUN}
+    l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
+fi
+if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
+    iget -r -v ${CURATED_CLUSTERING_COLL}
+    l_curated_clustering_coll="$(pwd)/$(basename ${CURATED_CLUSTERING_COLL})"
+fi
 
-# conda deactivate
+conda deactivate
     
 #----------------------------------------------#
 # Install pipeline conda env
@@ -108,30 +123,32 @@ case $PROJECT_NAME in
     ;;
 esac
 
+# Determine
+
 set -euo pipefail
 
-
-# if [ ! -z "${PREVIOUS_RUN}" ] ; then
-#     echo "Using previous clustering run: ${PREVIOUS_RUN}"
-#     python juno_clustering.py \
-#         --queue "${QUEUE}" \
-#         -i "${input_dir}" \
-#         -o "${output_dir}" \
-#         --clustering-preset "${TYPE}" \
-#         --previous-clustering "${l_previous_run}" \
-#         --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}"           
-# else
-
-python rename_files.py \
+python workflow/scripts/rename_files.py \
     -i "${input_dir}" \
-    
-python juno_clustering.py \
+    -coll "${irods_runsheet_sys__runsheet__input_collection}" \
+
+if [ ! -z "${PREVIOUS_RUN}" ] ; then
+    echo "Using previous clustering run: ${PREVIOUS_RUN}"
+    python workflow/scripts/juno_clustering.py \
+        --queue "${QUEUE}" \
+        -i "${input_dir}" \
+        -o "${output_dir}" \
+        -t "${input_type}" \
+        --clustering-preset "${TYPE}" \
+        --previous-clustering "${l_previous_run}" \
+        --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" \
+        --cluster-collection-name "${l_curated_clustering_coll}"
+else  
+python workflow/scripts/juno_clustering.py \
     --queue "${QUEUE}" \
     -i "${input_dir}" \
     -o "${output_dir}" \
-    --clustering-preset "${TYPE}" \
-      
-# fi
+    --clustering-preset "${TYPE}"
+fi
 
 result=$?
 

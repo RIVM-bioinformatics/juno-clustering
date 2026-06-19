@@ -3,21 +3,24 @@ from pathlib import Path
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Process data from an input directory to an output directory"
+        description="Input folder"
     )
 
     parser.add_argument(
-        "-i",
-        "--input-dir",
-        required=True,
-        type=Path,
-        help="Path to the input directory"
-    )
+        "-i", "--input-dir", required=True, type=Path,
+        help="Path to the input directory")
+    parser.add_argument(
+        "-coll", "--collection", required=True, type=str,
+        help="Collection_name")
+
 
     return parser.parse_args()
 
 
 def rewrite_fasta_header(src: Path, dst: Path) -> None:
+    '''
+    change the fasta header to contain the renamed filename
+    '''
     new_id = dst.stem  # or src.stem — choose intentionally
 
     with src.open() as fin, dst.open("w") as fout:
@@ -35,10 +38,17 @@ def rewrite_fasta_header(src: Path, dst: Path) -> None:
         fout.writelines(fin)
 
 
-def main():
+def rename_files():
+    '''
+    Rename files in an input directory to make the names unique by adding the collection name as a prefix
+    Depends the source of the data. If in iRODS a runsheet is used with multiple input collections the
+    data will be on a  
+    '''
+        
     args = parse_args()
 
     input_dir = args.input_dir
+    input_coll = args.input_coll
     
     # Find files in the directory  
     input_dir = Path(input_dir)
@@ -55,6 +65,7 @@ def main():
     dir_length = len(input_dir.parts)
     
     paths = list(input_dir.rglob("*"))
+    
         
     # move and rename files
     for path in paths:
@@ -84,6 +95,9 @@ def main():
                 
                 print(f'Moved {path} to {new_path}')
        
+
 if __name__ == "__main__":
-    main()
+    
+    rename_files()
+
 
