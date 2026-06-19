@@ -62,6 +62,13 @@ class JunoClustering(Pipeline):
             help="Separator for merged cluster names.",
             default="|",
         )
+        self.add_argument(
+            "--input-collection-name",
+            type=str,
+            required=False,
+            metavar="STR",
+            help="Name of input collection.",
+        )
 
 
     def _parse_args(self) -> argparse.Namespace:
@@ -137,3 +144,11 @@ class JunoClustering(Pipeline):
 
 if __name__ == "__main__":
     main()
+
++ python juno_clustering.py 
+--queue bio-acc 
+-i /mnt/scratch_dir/svc-sscc-ira/pipelines/72a1d2bc/input 
+-o /mnt/scratch_dir/svc-sscc-ira/pipelines/72a1d2bc/output 
+--clustering-preset mycobacterium_tuberculosis 
+--previous-clustering /mnt/scratch_dir/svc-sscc-ira/pipelines/72a1d2bc/pipeline/myco_clustering_0050 
+--input-collection-name /rivmZone_acc_01/projects/myco/myco_test_05_0003
