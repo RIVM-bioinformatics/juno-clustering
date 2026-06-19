@@ -64,6 +64,7 @@ set -x
 PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -i ${irods_runsheet_sys__runsheet__input_collection} \
     -x "sys::pipeline::gitrepo=https://github.com/RIVM-bioinformatics/juno-clustering.git" \
+    -m projectID \
     -x "sys::data::state=valid" \
     -r "sys::run::finish_time" \
     -X "user::data::state=invalid" \
