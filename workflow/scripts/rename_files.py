@@ -3,22 +3,6 @@ import logging
 from pathlib import Path
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Input folder"
-    )
-
-    parser.add_argument(
-        "-i", "--input-dir", required=True, type=Path,
-        help="Path to the input directory")
-    parser.add_argument(
-        "-ic", "--input-coll", required=True, type=str,
-        help="Input Collection name")
-    parser.add_argument('-l', '--log_file', help='Log file path', default='rename_files.log')
-
-    return parser.parse_args()
-
-
 def rewrite_fasta_header(src: Path, dst: Path) -> None:
     '''
     change the fasta header to contain the renamed filename
@@ -49,6 +33,17 @@ def rename_files():
     data will be on a  
     '''
     
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-i", "--input-dir", required=True, type=Path,
+        help="Path to the input directory")
+    parser.add_argument(
+        "-ic", "--input-coll", required=True, type=str,
+        help="Input Collection name")
+    parser.add_argument('-l', '--log_file', help='Log file path', default='rename_files.log')
+  
+    args = parser.parse_args()
+    
     # Set up logging
     logging.basicConfig(
         filename=args.log_file,
@@ -56,8 +51,6 @@ def rename_files():
         format='%(asctime)s %(levelname)s: %(message)s',
         level=logging.INFO
     )
-    
-    args = parse_args()
 
     input_dir = args.input_dir
     input_coll = args.input_coll

@@ -124,8 +124,6 @@ case $PROJECT_NAME in
     ;;
 esac
 
-# Determine
-
 set -euo pipefail
 
 python workflow/scripts/rename_files.py \
@@ -133,7 +131,6 @@ python workflow/scripts/rename_files.py \
     --input-coll "${irods_runsheet_sys__runsheet__input_collection}" \
     -l "../output/log/rename_files.log"
     
-
 if [ ! -z "${PREVIOUS_RUN}" ] ; then
     echo "Using previous clustering run: ${PREVIOUS_RUN}"
     python workflow/scripts/juno_clustering.py \
