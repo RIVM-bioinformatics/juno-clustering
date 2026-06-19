@@ -88,6 +88,10 @@ fi
 if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     iget -r -v ${CURATED_CLUSTERING_COLL}
     l_curated_clustering_coll="$(pwd)/$(basename ${CURATED_CLUSTERING_COLL})"
+    
+    # copy the clusters.csv from the downstream to the previous_run folder
+    mv ${l_previous_run}/clusters.csv ${l_previous_run}/clusters.csv.old
+    cp ${l_curated_clustering_coll}/clusters.csv ${l_previous_run}/clusters.csv
 fi
 
 conda deactivate
@@ -125,8 +129,8 @@ esac
 set -euo pipefail
 
 python workflow/scripts/rename_files.py \
-    -i "${input_dir}" \
-    -coll "${irods_runsheet_sys__runsheet__input_collection}" \
+    --input-dir "${input_dir}" \
+    --input-coll "${irods_runsheet_sys__runsheet__input_collection}" \
 
 if [ ! -z "${PREVIOUS_RUN}" ] ; then
     echo "Using previous clustering run: ${PREVIOUS_RUN}"
@@ -134,7 +138,6 @@ if [ ! -z "${PREVIOUS_RUN}" ] ; then
         --queue "${QUEUE}" \
         -i "${input_dir}" \
         -o "${output_dir}" \
-        -t "${input_type}" \
         --clustering-preset "${TYPE}" \
         --previous-clustering "${l_previous_run}" \
         --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" \

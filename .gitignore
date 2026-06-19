@@ -151,7 +151,7 @@ dmypy.json
 # Added stuff
 .snakemake
 envs/src
-input
+input*
 output
 sample_sheet.yaml
 config/sample_sheet.yaml

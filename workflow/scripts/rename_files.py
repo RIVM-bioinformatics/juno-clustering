@@ -10,9 +10,8 @@ def parse_args():
         "-i", "--input-dir", required=True, type=Path,
         help="Path to the input directory")
     parser.add_argument(
-        "-coll", "--collection", required=True, type=str,
-        help="Collection_name")
-
+        "-ic", "--input_coll", required=True, type=str,
+        help="Input Collection name")
 
     return parser.parse_args()
 
@@ -70,30 +69,27 @@ def rename_files():
     # move and rename files
     for path in paths:
         
-        if path.is_file():
-            new_folder = path.parent
-            # determine new path
-            if path.suffix == '.fasta':
-                new_folder = fasta_folder
-            if path.suffix == '.json':
-                new_folder = json_folder
+        if not path.is_file():
+            continue
+        
+        new_folder = path.parent
+        
+        # only move and rename fasta and json files from old folder, so exclude the newly created ones
+        if path.parts[1] != 'mtb_typing' and path.suffix in ['.fasta', '.json']:
+            # determine collection name
+            name_extension = input_coll.split('/')[-1]
+            # append collection name to file name
+            new_name = f'{path.stem}_{name_extension}{path.suffix}'
+            new_path = new_folder / new_name
             
-            # only move and rename fasta and json files from old folder, so exclude the newly created ones
-            if path.parts[1] != 'mtb_typing' and path.suffix in ['.fasta', '.json']:
-                # determine collection name
-                name_extension = path.parts[dir_length + 3]
-                # append collection name to file name
-                new_name = f'{path.stem}_{name_extension}{path.suffix}'
-                new_path = new_folder / new_name
-                
-                # rewrite fasta header to correspond with file name and move file
-                if path.suffix == '.fasta':
-                    rewrite_fasta_header(path, new_path)
-                # move and rename json file
-                if path.suffix == '.json':
-                    path.rename(new_path)
-                
-                print(f'Moved {path} to {new_path}')
+            # rewrite fasta header to correspond with file name and move file
+            if path.suffix == '.fasta':
+                rewrite_fasta_header(path, new_path)
+            # move and rename json file
+            if path.suffix == '.json':
+                path.rename(new_path)
+            
+            print(f'Moved {path} to {new_path}')
        
 
 if __name__ == "__main__":
