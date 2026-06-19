@@ -1,5 +1,7 @@
 import argparse
+import logging
 from pathlib import Path
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -10,8 +12,9 @@ def parse_args():
         "-i", "--input-dir", required=True, type=Path,
         help="Path to the input directory")
     parser.add_argument(
-        "-ic", "--input_coll", required=True, type=str,
+        "-ic", "--input-coll", required=True, type=str,
         help="Input Collection name")
+    parser.add_argument('-l', '--log_file', help='Log file path', default='rename_files.log')
 
     return parser.parse_args()
 
@@ -32,7 +35,9 @@ def rewrite_fasta_header(src: Path, dst: Path) -> None:
         rest = f" {parts[1]}" if len(parts) > 1 else ""
 
         fout.write(f">{new_id}{rest}\n")
-
+        
+        logging.info(f'Replaced header in file: {dst}')
+        
         # copy the remainder verbatim
         fout.writelines(fin)
 
@@ -43,7 +48,15 @@ def rename_files():
     Depends the source of the data. If in iRODS a runsheet is used with multiple input collections the
     data will be on a  
     '''
-        
+    
+    # Set up logging
+    logging.basicConfig(
+        filename=args.log_file,
+        filemode='a',
+        format='%(asctime)s %(levelname)s: %(message)s',
+        level=logging.INFO
+    )
+    
     args = parse_args()
 
     input_dir = args.input_dir
@@ -89,7 +102,7 @@ def rename_files():
             if path.suffix == '.json':
                 path.rename(new_path)
             
-            print(f'Moved {path} to {new_path}')
+            logging.info(f'Moved {path} to {new_path}')
        
 
 if __name__ == "__main__":
