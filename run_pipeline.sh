@@ -133,16 +133,15 @@ python workflow/scripts/rename_files.py \
     
 if [ ! -z "${PREVIOUS_RUN}" ] ; then
     echo "Using previous clustering run: ${PREVIOUS_RUN}"
-    python workflow/scripts/juno_clustering.py \
+    python juno_clustering.py \
         --queue "${QUEUE}" \
         -i "${input_dir}" \
         -o "${output_dir}" \
         --clustering-preset "${TYPE}" \
         --previous-clustering "${l_previous_run}" \
         --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" \
-        --cluster-collection-name "${l_curated_clustering_coll}"
 else  
-python workflow/scripts/juno_clustering.py \
+python juno_clustering.py \
     --queue "${QUEUE}" \
     -i "${input_dir}" \
     -o "${output_dir}" \
