@@ -46,10 +46,17 @@ def irodsConnect(irodsfile="", use_ssl = False):
 
         
 def find_downstream_clusterfile():
+    '''
+    '''
+    parser = argparse.ArgumentParser(description='Find report collection based on metadata parameters')
+    parser.add_argument('-p', '--previous-run', help='Previous clustering run', required=True)
+    parser.add_argument('-x', '--extra_metadata', help='Extra metadata to match', action='append', default=[])
+    parser.add_argument('-X', '--extra_metadata_not', help='Extra metadata to not match', action='append', default=[])
+    parser.add_argument('-l', '--log_file', help='Log file path', default='find_downstream_clusterfile.log')
+
+    args = parser.parse_args()
     
-    args = parse_args()
-    
-    previous_run = args.previous_run_clustering_collection
+    previous_run = args.previous_run
 
     # Set up logging
     logging.basicConfig(
