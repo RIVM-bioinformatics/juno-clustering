@@ -67,11 +67,9 @@ def rename_files():
     fasta_folder.mkdir(parents=True, exist_ok=True)
     json_folder.mkdir(parents=True, exist_ok=True)
     audit_trail.mkdir(parents=True, exist_ok=True)
-    dir_length = len(input_dir.parts)
     
     paths = list(input_dir.rglob("*"))
-    
-        
+            
     # move and rename files
     for path in paths:
         
