@@ -50,6 +50,7 @@ def find_downstream_clusterfile():
     '''
     parser = argparse.ArgumentParser(description='Find report collection based on metadata parameters')
     parser.add_argument('-p', '--previous-run', help='Previous clustering run', required=True)
+    parser.add_argument('-S', '--use_ssl', help="Use SSL for irods connection", action="store_true")
     parser.add_argument('-x', '--extra_metadata', help='Extra metadata to match', action='append', default=[])
     parser.add_argument('-X', '--extra_metadata_not', help='Extra metadata to not match', action='append', default=[])
     parser.add_argument('-l', '--log_file', help='Log file path', default='find_downstream_clusterfile.log')
