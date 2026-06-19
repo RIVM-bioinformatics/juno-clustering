@@ -76,7 +76,8 @@ def find_downstream_clusterfile():
             query = irods_session.query(CollectionMeta.value).filter(
                 Criterion('=', Collection.name, previous_run)).filter(
                 Criterion('=', CollectionMeta.name, 'sys::dataset_id'))
-            dataset_id = { q[CollectionMeta.value]: None for q in query }
+            dataset_id = [q[CollectionMeta.value] for q in query][0]
+            logging.info(f"Previous clustering run collection dataset_id: {dataset_id}")
         except Exception as e:
             logging.error('Error finding dataset_id previous clustering collection: %s', str(e))
             return False
@@ -87,7 +88,7 @@ def find_downstream_clusterfile():
                 Criterion('=', CollectionMeta.name, 'user::pipeline::input_collection_id')).filter(
                 Criterion('=', CollectionMeta.value, dataset_id))
                 
-            downstream_coll_name = { q[Collection.name]: None for q in query }
+            downstream_coll_name = [ q[Collection.name] for q in query ][0]
             
             # This print inserts the string in the run_pipeline.sh script
             print(downstream_coll_name)
