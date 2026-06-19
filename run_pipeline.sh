@@ -67,7 +67,8 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -x "sys::data::state=valid" \
     -r "sys::run::finish_time" \
     -X "user::data::state=invalid" \
-    -l collfinder.log)
+    -l "../output/log/collfinder.log"
+    )
 
 echo "previous_clustering_run: ${PREVIOUS_RUN}"
 
@@ -77,7 +78,7 @@ CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_clusterfile.p
     -i ${irods_runsheet_sys__runsheet__input_collection} \
     -x "sys::data::state=valid" \
     -X "user::data::state=invalid" \
-    -l find_downstream_clusterfile.log
+    -l "../output/log/find_downstream_clusterfile.log"
     )
 
 echo "curated_clustering_collection: ${CURATED_CLUSTERING_COLL}"
