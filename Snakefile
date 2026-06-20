@@ -22,7 +22,7 @@ print("Previous clustering collection:", PREVIOUS_CLUSTERING)
 
 if PREVIOUS_CLUSTERING == "None":
     Path(OUT).mkdir(parents=True, exist_ok=True)
-    Path(OUT + "/previous_list_excluded_samples.txt").touch()
+    Path(OUT + "/previous_list_excluded_samples.tsv").touch()
 
 # DATE_APPEND_TSV = config["tsv"]
 # INPUT_COLLECTION_NAME = config["input_collection_name"]
