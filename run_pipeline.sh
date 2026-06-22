@@ -140,7 +140,6 @@ if [ ! -z "${PREVIOUS_RUN}" ] ; then
         --clustering-preset "${TYPE}" \
         --previous-clustering "${l_previous_run}" \
         --input-collection-name "${irods_runsheet_sys__runsheet__input_collection}" \
-        -ex "${EXCLUSION_FILE}"
 else  
 python juno_clustering.py \
     --queue "${QUEUE}" \
