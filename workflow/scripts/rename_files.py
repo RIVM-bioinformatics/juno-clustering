@@ -66,18 +66,11 @@ def rename_files():
     json_folder = input_dir / "mtb_typing" / "seq_exp_json"
     audit_trail = input_dir / "audit_trail"
     
-    # create folders to store the data
-    fasta_folder.mkdir(parents=True, exist_ok=True)
-    json_folder.mkdir(parents=True, exist_ok=True)
-    audit_trail.mkdir(parents=True, exist_ok=True)
+    fasta_paths = list(fasta_folder.glob("*"))
+    json_paths = list(json_folder.glob("*"))
     
-    paths = list(input_dir.rglob("*"))
-    
-    #TODO: only defined folders
-
-            
     # move and rename files
-    for path in paths:
+    for path in fasta_paths + json_paths:
         
         if not path.is_file():
             continue
