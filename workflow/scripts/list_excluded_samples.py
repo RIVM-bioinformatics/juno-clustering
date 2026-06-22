@@ -80,15 +80,18 @@ if __name__ == "__main__":
     # parser.add_argument("--sample-date-map", type=str, required=False)
 
     args = parser.parse_args()
-
-    expanded_inputs = []
-    for p in args.input:
-        if p.is_dir():
-            expanded_inputs.extend(sorted(p.glob("*.json")))
-        else:
-            expanded_inputs.append(p)
-    args.input = expanded_inputs
-
+    
+    logging.info('parsed arguments')
+    
+    # expanded_inputs = []
+    # for p in args.input:
+    #     if p.is_dir():
+    #         expanded_inputs.extend(sorted(p.glob("*.json")))
+    #     else:
+    #         expanded_inputs.append(p)
+    # args.input = expanded_inputs
+    
+    
     # # Parse sample_date_map if provided
     # if args.sample_date_map:
     #     sample_date_map = json.loads(args.sample_date_map)
