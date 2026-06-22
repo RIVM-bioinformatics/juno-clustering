@@ -171,6 +171,13 @@ do
     fi
 done
 
+# set provenance information for previous clustering:
+if [ ! -z "${PREVIOUS_RUN}" ]
+then
+   echo user::pipeline::input_collection: $PREVIOUS_RUN >> $OUTPUT/metadata.yml
+   echo user::pipeline::input_collection: $CURATED_CLUSTERING_COLL >> $OUTPUT/metadata.yml
+fi
+
 set -euo pipefail
 
 exit ${result}
