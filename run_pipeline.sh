@@ -84,6 +84,9 @@ CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_clusterfile.p
 if [ ! -z "${PREVIOUS_RUN}" ] ; then
     iget -r -v ${PREVIOUS_RUN}
     l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
+    # set provenance information for previous clustering:
+    echo user::pipeline::input_collection: "${PREVIOUS_RUN}" >> ${output_dir}/metadata.yml
+fi
 fi
 if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     iget -r -v ${CURATED_CLUSTERING_COLL}
@@ -92,6 +95,9 @@ if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     # copy the clusters.csv from the downstream to the previous_run folder
     mv ${l_previous_run}/clusters.csv ${l_previous_run}/clusters.csv.old
     cp ${l_curated_clustering_coll}/clusters.csv ${l_previous_run}/clusters.csv
+    # set provenance information for previous clustering:
+    echo user::pipeline::input_collection: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
+fi
 fi
 
 conda deactivate
@@ -130,7 +136,7 @@ python workflow/scripts/rename_files.py \
     --input-dir "${input_dir}" \
     --input-coll "${irods_runsheet_sys__runsheet__input_collection}" \
     -l "../output/log/rename_files.log"
-    
+
 if [ ! -z "${PREVIOUS_RUN}" ] ; then
     echo "Using previous clustering run: ${PREVIOUS_RUN}"
     python juno_clustering.py \
@@ -167,16 +173,10 @@ do
     if [ ! -z ${!key} ] ; then
         attrname=${key:12}
         attrname=${attrname/__/::}
-        echo "${attrname}: '${!key}'" >> ${OUTPUTDIR}/metadata.yml
+        echo "${attrname}: '${!key}'" >> ${output_dir}/metadata.yml
     fi
 done
 
-# set provenance information for previous clustering:
-if [ ! -z "${PREVIOUS_RUN}" ]
-then
-   echo user::pipeline::input_collection: ${PREVIOUS_RUN} >> ${OUTPUTDIR}/metadata.yml
-   echo user::pipeline::input_collection: ${CURATED_CLUSTERING_COLL} >> ${OUTPUTDIR}/metadata.yml
-fi
 
 set -euo pipefail
 
