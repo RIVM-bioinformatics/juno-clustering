@@ -69,8 +69,6 @@ def main(args):
     df_final.to_csv(args.output, sep="\t", index=False)
 
 
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 

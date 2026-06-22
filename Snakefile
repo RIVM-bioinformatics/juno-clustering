@@ -70,7 +70,6 @@ localrules:
     all,
     copy_assemblies_to_temp,
     copy_or_touch_list_excluded_samples,
-    touch_list_excluded_samples,
 
 
 include: "workflow/rules/combine_snp_profiles.smk"
