@@ -87,7 +87,7 @@ if [ ! -z "${PREVIOUS_RUN}" ] ; then
     # set provenance information for previous clustering:
     echo user::pipeline::input_collection: "${PREVIOUS_RUN}" >> ${output_dir}/metadata.yml
 fi
-fi
+
 if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     iget -r -v ${CURATED_CLUSTERING_COLL}
     l_curated_clustering_coll="$(pwd)/$(basename ${CURATED_CLUSTERING_COLL})"
@@ -97,7 +97,6 @@ if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     cp ${l_curated_clustering_coll}/clusters.csv ${l_previous_run}/clusters.csv
     # set provenance information for previous clustering:
     echo user::pipeline::input_collection: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
-fi
 fi
 
 conda deactivate
