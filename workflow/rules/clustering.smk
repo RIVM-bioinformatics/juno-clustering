@@ -17,8 +17,9 @@ fi
 
     rule list_excluded_samples:
         input:
-            seq_exp_json_dir=
-                INPUT + "/mtb_typing/seq_exp_json",
+            seq_exp_json=expand(
+                INPUT + "/mtb_typing/seq_exp_json/{sample}.json", sample=SAMPLES
+            ),
             exclude_list=OUT + "/previous_list_excluded_samples.tsv",
         output:
             OUT + "/list_excluded_samples.tsv",
@@ -35,13 +36,12 @@ fi
         params:
             coverage_threshold=config["coverage_threshold"],
             inclusion_pattern=config["inclusion_pattern"],
-            # sample_date_map=json.dumps(SAMPLE_DATE_MAP),
         threads: config["threads"]["compression"]
         shell:
             """
 # columns: sample, reason, date
 python workflow/scripts/list_excluded_samples.py \
---input {input.seq_exp_json_dir} \
+--input {input.seq_exp_json} \
 --previous-exclude-list {input.exclude_list} \
 --output {output} \
 --inclusion-pattern {params.inclusion_pattern} \
