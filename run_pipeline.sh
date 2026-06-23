@@ -70,7 +70,6 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -x "sys::data::state=valid" \
     -r "sys::run::finish_time" \
     -X "user::data::state=invalid" \
-    -X "user::pipeline::input_collection=${irods_runsheet_sys__runsheet__input_collection}" \
     -l "../output/log/collfinder.log"
     )
 
