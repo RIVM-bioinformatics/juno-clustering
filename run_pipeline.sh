@@ -60,6 +60,8 @@ mamba env create -f envs/collfinder.yaml --name collfinder_env
 conda activate collfinder_env
 
 # Run collfinder.py in subshell
+# exclude collections with input_collection = irods_runsheet_sys__runsheet__input_collection
+# to be able to rerun (after adding curated clusters.csv)
 set -x
 PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -i ${irods_runsheet_sys__runsheet__input_collection} \
@@ -68,6 +70,7 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -x "sys::data::state=valid" \
     -r "sys::run::finish_time" \
     -X "user::data::state=invalid" \
+    -X "user::pipeline::input_collection=${irods_runsheet_sys__runsheet__input_collection}" \
     -l "../output/log/collfinder.log"
     )
 
@@ -96,7 +99,7 @@ if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     mv ${l_previous_run}/clusters.csv ${l_previous_run}/clusters.csv.old
     cp ${l_curated_clustering_coll}/clusters.csv ${l_previous_run}/clusters.csv
     # set provenance information for previous clustering:
-    echo user::pipeline::input_collection: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
+    echo user::pipeline::input_collection_curated_cluster: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
 fi
 
 conda deactivate
