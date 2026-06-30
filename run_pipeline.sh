@@ -62,6 +62,7 @@ conda activate collfinder_env
 # Run collfinder.py in subshell
 # exclude collections with input_collection = irods_runsheet_sys__runsheet__input_collection
 # to be able to rerun (after adding curated clusters.csv)
+
 set -x
 PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -i ${irods_runsheet_sys__runsheet__input_collection} \
@@ -70,6 +71,7 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
     -x "sys::data::state=valid" \
     -r "sys::run::finish_time" \
     -X "user::data::state=invalid" \
+    -X "user::pipeline::input_collection=${irods_runsheet_sys__runsheet__input_collection}" \
     -l "../output/log/collfinder.log"
     )
 
