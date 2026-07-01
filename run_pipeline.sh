@@ -97,9 +97,14 @@ if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     iget -r -v ${CURATED_CLUSTERING_COLL}
     l_curated_clustering_coll="$(pwd)/$(basename ${CURATED_CLUSTERING_COLL})"
     
+    # copy the clusters.csv files to the output
+    cp ${l_previous_run}/clusters.csv ../output/clusters.csv.previous
+    cp ${l_curated_clustering_coll}/clusters.csv ../output/clusters.csv.curated
+    
     # copy the clusters.csv from the downstream to the previous_run folder
     mv ${l_previous_run}/clusters.csv ${l_previous_run}/clusters.csv.old
     cp ${l_curated_clustering_coll}/clusters.csv ${l_previous_run}/clusters.csv
+    
     # set provenance information for previous clustering:
     echo user::pipeline::input_collection_curated_cluster: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
 fi
