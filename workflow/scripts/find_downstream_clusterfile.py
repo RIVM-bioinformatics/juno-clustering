@@ -88,10 +88,14 @@ def find_downstream_clusterfile():
                 Criterion('=', CollectionMeta.name, 'user::pipeline::input_collection_id')).filter(
                 Criterion('=', CollectionMeta.value, dataset_id))
             
-            if len(query) > 0:    
-                downstream_coll_name = [ q[Collection.name] for q in query ][0]
+            downstream_coll_name_list = [ q[Collection.name] for q in query ]
+            
+            if len(downstream_coll_name_list) > 0:
+                
+                downstream_coll_name = downstream_coll_name_list[0]
             
                 logging.info(f"Previous clustering run collection with curated clusters.csv: {downstream_coll_name}")
+                
                 # This print inserts the string in the run_pipeline.sh script
                 print(downstream_coll_name)
                 
