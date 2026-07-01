@@ -89,6 +89,10 @@ CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_clusterfile.p
 if [ ! -z "${PREVIOUS_RUN}" ] ; then
     iget -r -v ${PREVIOUS_RUN}
     l_previous_run="$(pwd)/$(basename ${PREVIOUS_RUN})"
+    
+    # copy previous clustering file to the output collection
+    cp ${l_previous_run}/clusters.csv ../output/clusters_previous.csv
+    
     # set provenance information for previous clustering:
     echo user::pipeline::input_collection: "${PREVIOUS_RUN}" >> ${output_dir}/metadata.yml
 fi
@@ -97,9 +101,8 @@ if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     iget -r -v ${CURATED_CLUSTERING_COLL}
     l_curated_clustering_coll="$(pwd)/$(basename ${CURATED_CLUSTERING_COLL})"
     
-    # copy the clusters.csv files to the output
-    cp ${l_previous_run}/clusters.csv ../output/clusters.csv.previous
-    cp ${l_curated_clustering_coll}/clusters.csv ../output/clusters.csv.curated
+    # copy the curated clusters.csv files to the output collection
+    cp ${l_curated_clustering_coll}/clusters.csv ../output/clusters_previous_curated.csv
     
     # copy the clusters.csv from the downstream to the previous_run folder
     mv ${l_previous_run}/clusters.csv ${l_previous_run}/clusters.csv.old

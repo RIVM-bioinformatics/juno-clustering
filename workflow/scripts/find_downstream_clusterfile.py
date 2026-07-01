@@ -87,13 +87,14 @@ def find_downstream_clusterfile():
             query = irods_session.query(Collection.name).filter(
                 Criterion('=', CollectionMeta.name, 'user::pipeline::input_collection_id')).filter(
                 Criterion('=', CollectionMeta.value, dataset_id))
-                
-            downstream_coll_name = [ q[Collection.name] for q in query ][0]
             
-            # This print inserts the string in the run_pipeline.sh script
-            if downstream_coll_name is not None:
+            if len(query) > 0:    
+                downstream_coll_name = [ q[Collection.name] for q in query ][0]
+            
                 logging.info(f"Previous clustering run collection with curated clusters.csv: {downstream_coll_name}")
+                # This print inserts the string in the run_pipeline.sh script
                 print(downstream_coll_name)
+                
             else:
                 logging.info("No collection with curated clusters.csv found.")          
             
