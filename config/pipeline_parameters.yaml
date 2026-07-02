@@ -1,9 +1,9 @@
 threads:
-    distance_calculation: 8
+    distance_calculation: 16
     clustering: 1
-    compression: 8
+    compression: 16
 
 mem_gb:
     distance_calculation: 64
-    clustering: 16
-    compression: 16
+    clustering: 64
+    compression: 256
