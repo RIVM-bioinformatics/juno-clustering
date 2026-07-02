@@ -1,0 +1,7 @@
+channels:
+- conda-forge
+- bioconda
+dependencies:
+- pigz=2.8
+- pandas=2.2.*
+- pyfastx=2.1.*

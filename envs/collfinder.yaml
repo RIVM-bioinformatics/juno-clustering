@@ -1,0 +1,9 @@
+name: collfinder_env
+channels:
+  - anaconda
+  - defaults
+dependencies:
+  - python=3.14
+  - pip
+  - pip:
+    - python-irodsclient==3.2.0

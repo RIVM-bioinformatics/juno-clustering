@@ -1,0 +1,42 @@
+# Testing for pipeline python wrapper and scripts used inside rules
+
+name: Clustering script tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config: 
+          - {os: ubuntu-latest}
+    name: Testing on ${{ matrix.config.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          generate-run-shell: false # see https://github.com/mamba-org/setup-micromamba/issues/130
+          cache-downloads: true
+          environment-file: tests/env.yaml
+      - name: Conda list
+        shell: bash -l {0}
+        run: conda list
+      - name: Unit tests
+        shell: bash -l {0}
+        run: pytest .
+      - name: Integration test, normal flow
+        shell: bash -l {0}
+        run: bash tests/normal_flow/run_test.sh
+      - name: Integration test, no previous clustering
+        shell: bash -l {0}
+        run: bash tests/no_previous_clustering/run_test.sh
+      - name: Integration test, merged clusters
+        shell: bash -l {0}
+        run: bash tests/merge/run_test.sh
+      - name: Integration test, curation
+        shell: bash -l {0}
+        run: bash tests/curation/run_test.sh
