@@ -95,7 +95,8 @@ class JunoClustering(Pipeline):
                     f"--bind {self.previous_clustering}:{self.previous_clustering}"
                 )
             self.snakemake_args["singularity_args"] = " ".join(list_sing_args)
-
+        if self.time_limit < 300:
+            self.time_limit = 600
         with open(
             Path(__file__).parent.joinpath("config/pipeline_parameters.yaml")
         ) as f:
