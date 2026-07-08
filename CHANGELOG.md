@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.0...v0.1.1) (2026-07-08)
+
+
+### Bug Fixes
+
+* increase time_limit for jobs ([c9e1809](https://github.com/RIVM-bioinformatics/juno-clustering/commit/c9e180964b2592f273b3c2e394d264dc3337f1b5))
+
 ## 0.1.0 (2026-07-02)
 
 
