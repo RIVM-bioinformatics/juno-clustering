@@ -6,4 +6,4 @@ threads:
 mem_gb:
     distance_calculation: 64
     clustering: 64
-    compression: 256
+    compression: 128
