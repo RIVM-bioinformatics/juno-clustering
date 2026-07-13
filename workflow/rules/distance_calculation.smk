@@ -9,7 +9,7 @@ if config["clustering_type"] == "alignment":
         conda:
             "../envs/distance_calculation.yaml"
         container:
-            "docker://ghcr.io/boasvdp/distle:0.1.0"
+            "docker://ghcr.io/boasvdp/distle:0.3.0"
         params:
             max_distance=config["max_distance"],
             output_mode="full",
@@ -38,7 +38,7 @@ if config["clustering_type"] == "mlst":
         conda:
             "../envs/distance_calculation.yaml"
         container:
-            "docker://ghcr.io/boasvdp/distle:0.1.0"
+            "docker://ghcr.io/boasvdp/distle:0.3.0"
         params:
             max_distance=config["max_distance"],
             output_mode="full",
