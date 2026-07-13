@@ -145,23 +145,13 @@ esac
 set -euo pipefail
 
 # make a copy of the input dir (to get rename permissions)
-input_dir_copy = "${input_dir}" + "_copy"
-mkdir ${input_dir_copy}
-
-USER=$(id -un)
-GROUP=$(id -gn)
-
-bindfs \
-  --force-user="${USER}" \
-  --force-group="${GROUP}" \
-  --perms=u=rwx:g=rx:o=rx \
-  ${input_dir} ${input_dir_copy}
+input_dir_copy="${input_dir}_copy"
+cp -r ${input_dir} ${input_dir_copy}
 
 python workflow/scripts/rename_files.py \
     --input-dir "${input_dir_copy}" \
     --input-coll "${irods_runsheet_sys__runsheet__input_collection}" \
     -l "../output/log/rename_files.log"
-
 
 if [ ! -z "${PREVIOUS_RUN}" ] ; then
     echo "Using previous clustering run: ${PREVIOUS_RUN}"
