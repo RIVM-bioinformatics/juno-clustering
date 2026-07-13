@@ -144,16 +144,30 @@ esac
 
 set -euo pipefail
 
+# make a copy of the input dir (to get rename permissions)
+input_dir_copy = "${input_dir}" + "_copy"
+mkdir ${input_dir_copy}
+
+USER=$(id -un)
+GROUP=$(id -gn)
+
+bindfs \
+  --force-user="${USER}" \
+  --force-group="${GROUP}" \
+  --perms=u=rwx:g=rx:o=rx \
+  ${input_dir} ${input_dir_copy}
+
 python workflow/scripts/rename_files.py \
-    --input-dir "${input_dir}" \
+    --input-dir "${input_dir_copy}" \
     --input-coll "${irods_runsheet_sys__runsheet__input_collection}" \
     -l "../output/log/rename_files.log"
+
 
 if [ ! -z "${PREVIOUS_RUN}" ] ; then
     echo "Using previous clustering run: ${PREVIOUS_RUN}"
     python juno_clustering.py \
         --queue "${QUEUE}" \
-        -i "${input_dir}" \
+        -i "${input_dir_copy}" \
         -o "${output_dir}" \
         --clustering-preset "${TYPE}" \
         --previous-clustering "${l_previous_run}" \
@@ -161,7 +175,7 @@ if [ ! -z "${PREVIOUS_RUN}" ] ; then
 else  
 python juno_clustering.py \
     --queue "${QUEUE}" \
-    -i "${input_dir}" \
+    -i "${input_dir_copy}" \
     -o "${output_dir}" \
     --clustering-preset "${TYPE}"
 fi
