@@ -36,6 +36,7 @@ fi
         params:
             coverage_threshold=config["coverage_threshold"],
             inclusion_pattern=config["inclusion_pattern"],
+            contamination_threshold=config["contamination_threshold"],
         threads: config["threads"]["compression"]
         shell:
             """
@@ -46,6 +47,7 @@ python workflow/scripts/list_excluded_samples.py \
 --output {output} \
 --inclusion-pattern {params.inclusion_pattern} \
 --coverage-threshold {params.coverage_threshold} \
+--contamination-threshold {params.contamination_threshold} \
 2>&1> {log}
             """
 

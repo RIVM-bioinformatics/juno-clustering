@@ -96,8 +96,24 @@ def find_downstream_clusterfile():
             
                 logging.info(f"Previous clustering run collection with curated clusters.csv: {downstream_coll_name}")
                 
+
+                clusters_file = f"{downstream_coll_name}/clusters.csv"
+                excluded_samples_file = f"{downstream_coll_name}/list_excluded_samples.tsv"
+
+                try:
+                    file_query = irods_session.query(DataObject.name).filter(
+                        Criterion('=', Collection.name, downstream_coll_name)).filter(
+                        Criterion('=', DataObject.name, ['clusters.csv', 'list_excluded_samples.tsv']))
+                    
+                    found_files = [q[DataObject.name] for q in file_query]
+                    print(clusters_file)
+                    print(excluded_samples_file)
+                    logging.info(f"Found files in collection {downstream_coll_name}: {found_files}")
+                except Exception as e:
+                    logging.error('Error finding files in collection %s: %s', downstream_coll_name, str(e))
+                    return False
                 # This print inserts the string in the run_pipeline.sh script
-                print(downstream_coll_name)
+                # print(downstream_coll_name)
                 
             else:
                 logging.info("No collection with curated clusters.csv found.")          

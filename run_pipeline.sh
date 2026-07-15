@@ -103,10 +103,13 @@ if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     
     # copy the curated clusters.csv files to the output collection
     cp ${l_curated_clustering_coll}/clusters.csv ../output/clusters_previous_curated.csv
+    cp ${l_curated_clustering_coll}/list_excluded_samples.tsv ../output/list_excluded_samples_previous_curated.tsv
     
     # copy the clusters.csv from the downstream to the previous_run folder
     mv ${l_previous_run}/clusters.csv ${l_previous_run}/clusters.csv.old
+    mv ${l_previous_run}/list_excluded_samples.tsv ${l_previous_run}/list_excluded_samples.tsv.old
     cp ${l_curated_clustering_coll}/clusters.csv ${l_previous_run}/clusters.csv
+    cp ${l_curated_clustering_coll}/list_excluded_samples.tsv ${l_previous_run}/list_excluded_samples.tsv
     
     # set provenance information for previous clustering:
     echo user::pipeline::input_collection_curated_cluster: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml

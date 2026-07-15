@@ -5,6 +5,7 @@ mycobacterium_tuberculosis:
   N_content_threshold: 0.5
   coverage_threshold: 20
   inclusion_pattern: "^NLA[a-zA-Z0-9]+"
+  contamination_threshold: 10
 salmonella:
   cluster_threshold: 7
   max_distance: 200
@@ -12,3 +13,4 @@ salmonella:
   N_content_threshold: None
   coverage_threshold: 0
   inclusion_pattern: "*"
+  contamination_threshold: 0.1
