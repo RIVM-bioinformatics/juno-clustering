@@ -14,6 +14,7 @@ def read_input_data(input_files):
             data[file.stem] = json.load(f)
     df = pd.DataFrame.from_dict(data, orient="index").reset_index(names="sample")
     df["mean_coverage"] = df["mean_coverage"].astype(float)
+    df["rrs_rrl_snp_counts"] = df["rrs_rrl_snp_counts"].astype(float)
     return df
 
 
@@ -26,6 +27,9 @@ def exclude_on_pattern(df, pattern):
     df_copy = df.copy()
     return df_copy[~df_copy["sample"].str.contains(pattern)]
 
+def exclude_on_contamination(df, contamination_threshold):
+    df_copy = df.copy()
+    return df_copy[df_copy["rrs_rrl_snp_counts"] > contamination_threshold]
 
 def read_previous_exclude_list(file):
     with open(file) as f:
@@ -42,10 +46,13 @@ def main(args):
     df_coverage_excluded["reason"] = "low_coverage"
     df_pattern_excluded = exclude_on_pattern(df, args.inclusion_pattern)
     df_pattern_excluded["reason"] = "not_NLA"
+    df_contamination_excluded = exclude_on_contamination(df, args.contamination_threshold)
+    df_contamination_excluded["reason"] = "high_contamination"
     df_excluded = pd.concat(
         [
             df_coverage_excluded[["sample", "reason"]],
             df_pattern_excluded[["sample", "reason"]],
+            df_contamination_excluded[["sample", "reason"]],
         ]
     )
     df_excluded["date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -77,6 +84,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--inclusion-pattern", type=str, required=True)
     parser.add_argument("--coverage-threshold", type=float, required=True)
+    parser.add_argument("--contamination-threshold", type=float, required=True)
     # parser.add_argument("--sample-date-map", type=str, required=False)
 
     args = parser.parse_args()

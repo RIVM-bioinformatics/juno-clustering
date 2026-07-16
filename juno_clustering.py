@@ -116,6 +116,7 @@ class JunoClustering(Pipeline):
             "N_content_threshold": str(self.N_content_threshold),  # from presets
             "coverage_threshold": str(self.coverage_threshold),  # from presets
             "inclusion_pattern": str(self.inclusion_pattern),  # from presets
+            "contamination_threshold": str(self.contamination_threshold),  # from presets
             "input_collection_name": str(self.input_collection_name),
         }
 

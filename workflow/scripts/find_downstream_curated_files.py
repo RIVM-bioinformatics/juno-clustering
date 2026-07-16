@@ -45,7 +45,7 @@ def irodsConnect(irodsfile="", use_ssl = False):
     return session
 
         
-def find_downstream_clusterfile():
+def find_downstream_curated_files():
     '''
     '''
     parser = argparse.ArgumentParser(description='Find report collection based on metadata parameters')
@@ -53,7 +53,7 @@ def find_downstream_clusterfile():
     parser.add_argument('-S', '--use_ssl', help="Use SSL for irods connection", action="store_true")
     parser.add_argument('-x', '--extra_metadata', help='Extra metadata to match', action='append', default=[])
     parser.add_argument('-X', '--extra_metadata_not', help='Extra metadata to not match', action='append', default=[])
-    parser.add_argument('-l', '--log_file', help='Log file path', default='find_downstream_clusterfile.log')
+    parser.add_argument('-l', '--log_file', help='Log file path', default='find_downstream_curated_files.log')
 
     args = parser.parse_args()
     
@@ -94,13 +94,14 @@ def find_downstream_clusterfile():
                 
                 downstream_coll_name = downstream_coll_name_list[0]
             
-                logging.info(f"Previous clustering run collection with curated clusters.csv: {downstream_coll_name}")
+                logging.info(f"Previous clustering run collection with curated files: {downstream_coll_name}")
                 
+
                 # This print inserts the string in the run_pipeline.sh script
                 print(downstream_coll_name)
                 
             else:
-                logging.info("No collection with curated clusters.csv found.")          
+                logging.info("No collection with curated files found.")
             
             return True
         
@@ -115,6 +116,6 @@ def find_downstream_clusterfile():
 
 
 if __name__ == "__main__":
-    if not find_downstream_clusterfile():
+    if not find_downstream_curated_files():
         sys.exit(2)
 
