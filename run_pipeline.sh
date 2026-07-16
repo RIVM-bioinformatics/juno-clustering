@@ -78,11 +78,11 @@ PREVIOUS_RUN=$( python workflow/scripts/collfinder.py \
 
 # Run find_downstream_clusterfile.py in subshell
 set -x
-CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_clusterfile.py \
+CURATED_CLUSTERING_COLL=$( python workflow/scripts/find_downstream_curated_files.py \
     -p ${PREVIOUS_RUN} \
     -x "sys::data::state=valid" \
     -X "user::data::state=invalid" \
-    -l "../output/log/find_downstream_clusterfile.log"
+    -l "../output/log/find_downstream_curated_files.log"
     )
 
 # Download the previous run collection and downstream collection containing curated cluster file
@@ -100,17 +100,22 @@ fi
 if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     iget -r -v ${CURATED_CLUSTERING_COLL}
     l_curated_clustering_coll="$(pwd)/$(basename ${CURATED_CLUSTERING_COLL})"
-    
+    if [ -f "${l_curated_clustering_coll}/clusters.csv" ]; then
     # copy the curated clusters.csv files to the output collection
-    cp ${l_curated_clustering_coll}/clusters.csv ../output/clusters_previous_curated.csv
-    cp ${l_curated_clustering_coll}/list_excluded_samples.tsv ../output/list_excluded_samples_previous_curated.tsv
-    
-    # copy the clusters.csv from the downstream to the previous_run folder
-    mv ${l_previous_run}/clusters.csv ${l_previous_run}/clusters.csv.old
-    mv ${l_previous_run}/list_excluded_samples.tsv ${l_previous_run}/list_excluded_samples.tsv.old
-    cp ${l_curated_clustering_coll}/clusters.csv ${l_previous_run}/clusters.csv
-    cp ${l_curated_clustering_coll}/list_excluded_samples.tsv ${l_previous_run}/list_excluded_samples.tsv
-    
+        cp "${l_curated_clustering_coll}/clusters.csv" "../output/clusters_previous_curated.csv"
+        # copy the clusters.csv from the downstream to the previous_run folder
+        mv "${l_previous_run}/clusters.csv" "${l_previous_run}/clusters.csv.old"
+        cp "${l_curated_clustering_coll}/clusters.csv" "${l_previous_run}/clusters.csv"
+    fi
+
+    if [ -f "${l_curated_clustering_coll}/list_excluded_samples.tsv" ]; then
+    # copy the curated list_excluded_samples.tsv files to the output collection
+        cp "${l_curated_clustering_coll}/list_excluded_samples.tsv" "../output/list_excluded_samples_previous_curated.tsv"
+        # copy the list_excluded_samples.tsv from the downstream to the previous_run folder
+        mv "${l_previous_run}/list_excluded_samples.tsv" "${l_previous_run}/list_excluded_samples.tsv.old"
+        cp "${l_curated_clustering_coll}/list_excluded_samples.tsv" "${l_previous_run}/list_excluded_samples.tsv"
+    fi
+
     # set provenance information for previous clustering:
     echo user::pipeline::input_collection_curated_cluster: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
 fi
