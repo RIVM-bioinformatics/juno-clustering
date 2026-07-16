@@ -117,7 +117,7 @@ if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     fi
 
     # set provenance information for previous clustering:
-    echo user::pipeline::input_collection_curated_cluster: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
+    echo user::pipeline::input_collection_1: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
 fi
 
 conda deactivate
