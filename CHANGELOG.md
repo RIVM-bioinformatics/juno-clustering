@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.3](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.2...v0.1.3) (2026-07-16)
+
+
+### Bug Fixes
+
+* check for previous clustering in distance calculation, exclude contam samples, find upstream exclude samples file ([f34fd0d](https://github.com/RIVM-bioinformatics/juno-clustering/commit/f34fd0d50fe28a497a24fc60b44450ed939eb009))
+* check that curated files exist ([052f68c](https://github.com/RIVM-bioinformatics/juno-clustering/commit/052f68c003181c35f251431921f8481c8b5ac555))
+* decrease mem for acc ([c9f4768](https://github.com/RIVM-bioinformatics/juno-clustering/commit/c9f47689b8f178ce8af84a887467d6988910c63f))
+* issue with files not getting fetched ([7ffd3d7](https://github.com/RIVM-bioinformatics/juno-clustering/commit/7ffd3d724da47396c8e1e56a0712efc6b47eb084))
+* lower memory ([752ac0a](https://github.com/RIVM-bioinformatics/juno-clustering/commit/752ac0a42e4b52b3d0e1184fa918bd0057a2c29f))
+* reset distance calcuation params ([654e6ee](https://github.com/RIVM-bioinformatics/juno-clustering/commit/654e6ee9ab03fe501e19b66bb5757efd34417a2f))
+* revert changes to script find_downstream_clusterfile ([7e3844d](https://github.com/RIVM-bioinformatics/juno-clustering/commit/7e3844d5ea3b2be49495029c6503c6e19625d792))
+
 ## [0.1.1](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.0...v0.1.1) (2026-07-08)
 
 
