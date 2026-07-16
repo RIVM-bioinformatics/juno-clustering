@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.3...v0.1.4) (2026-07-16)
+
+
+### Bug Fixes
+
+* update pipeline parameters ([48390ef](https://github.com/RIVM-bioinformatics/juno-clustering/commit/48390efb16ef265bf10a3fd67ea32f3d9521ae64))
+
 ## [0.1.3](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.2...v0.1.3) (2026-07-16)
 
 
