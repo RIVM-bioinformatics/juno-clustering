@@ -292,7 +292,10 @@ def construct_new_cluster_name(current_clusters_dict, separator):
         return name
 
     # find most recent cluster and parse name
-    most_recent_cluster = sorted(current_clusters)[-1]
+    # most_recent_cluster = sorted(current_clusters)[-1]
+    # find most recent cluster by parse name and exclude Z-range Z938-Z999
+    excluded_range = [c for c in current_clusters if c.startswith("Z") and 938 <= int(c[1:]) <= 999]
+    most_recent_cluster = sorted(c for c in current_clusters if c not in excluded_range)[-1]
     first_char = most_recent_cluster[0]
     number = int(most_recent_cluster[1:])
 
