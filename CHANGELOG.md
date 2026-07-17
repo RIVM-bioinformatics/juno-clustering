@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.5...v0.1.6) (2026-07-17)
+
+
+### Bug Fixes
+
+* update Z-cluster range ([9cd5284](https://github.com/RIVM-bioinformatics/juno-clustering/commit/9cd52848162cc3eeb8af48eb824ad58c6d8926e8))
+
 ## [0.1.5](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.4...v0.1.5) (2026-07-17)
 
 
