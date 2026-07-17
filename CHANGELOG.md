@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.4...v0.1.5) (2026-07-17)
+
+
+### Bug Fixes
+
+* exclude cluster range Z938-999 ([772c625](https://github.com/RIVM-bioinformatics/juno-clustering/commit/772c625c98c2a4edead8be6ccfdee7817ebcc321))
+
 ## [0.1.4](https://github.com/RIVM-bioinformatics/juno-clustering/compare/v0.1.3...v0.1.4) (2026-07-16)
 
 
