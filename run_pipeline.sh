@@ -178,8 +178,8 @@ fi
 
 result=$?
 
-# Propagate metadata
-cat > ${output_dir}/metadata_template.json <<EOF
+# Set metadata of input collections
+cat > "${output_dir}/metadata.json" <<EOF
 {
   "version": 1,
   "checksum_format": "sha256",
@@ -190,12 +190,12 @@ cat > ${output_dir}/metadata_template.json <<EOF
       "type": "collection",
       "metadata": [
         {
-          "attr": "user::pipeline::input_collection_id",
-          "value": "AAAA"
+          "attr": "user::pipeline::input_collection",
+          "value": "${PREVIOUS_RUN}"
         },
         {
-          "attr": "user::pipeline::input_collection_id",
-          "value": "BBBB"
+          "attr": "user::pipeline::input_collection",
+          "value": "${CURATED_CLUSTERING_COLL}"
         }
       ]
     }
@@ -203,10 +203,9 @@ cat > ${output_dir}/metadata_template.json <<EOF
 }
 EOF
 
-cat ${output_dir}/metadata.json.template | awk '{gsub("AAAA",${PREVIOUS_RUN});gsub("BBBB",${CURATED_CLUSTERING_COLL}) ; print $0}' > ${output_dir}/metadata.json
-
 set +euo pipefail
 
+# Propagate metadata
 SEQ_KEYS=
 SEQ_ENV=`env | grep irods_input_sequencing`
 for SEQ_AVU in ${SEQ_ENV}
