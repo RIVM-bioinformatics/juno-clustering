@@ -94,7 +94,6 @@ if [ ! -z "${PREVIOUS_RUN}" ] ; then
     cp ${l_previous_run}/clusters.csv ../output/clusters_previous.csv
     
     # set provenance information for previous clustering:
-    echo user::pipeline::input_collection: "${PREVIOUS_RUN}" >> ${output_dir}/metadata.yml
 fi
 
 if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
@@ -117,7 +116,6 @@ if [ ! -z "${CURATED_CLUSTERING_COLL}" ] ; then
     fi
 
     # set provenance information for previous clustering:
-    echo user::pipeline::input_collection_1: "${CURATED_CLUSTERING_COLL}" >> ${output_dir}/metadata.yml
 fi
 
 conda deactivate
@@ -180,10 +178,34 @@ fi
 
 result=$?
 
-# Propagate metadata
+# Set metadata of input collections
+cat > "${output_dir}/metadata.json" <<EOF
+{
+  "version": 1,
+  "checksum_format": "sha256",
+  "checksum_encoding": "hex",
+  "objects": [
+    {
+      "path": ".",
+      "type": "collection",
+      "metadata": [
+        {
+          "attr": "user::pipeline::input_collection",
+          "value": "${PREVIOUS_RUN}"
+        },
+        {
+          "attr": "user::pipeline::input_collection",
+          "value": "${CURATED_CLUSTERING_COLL}"
+        }
+      ]
+    }
+  ]
+}
+EOF
 
 set +euo pipefail
 
+# Propagate metadata
 SEQ_KEYS=
 SEQ_ENV=`env | grep irods_input_sequencing`
 for SEQ_AVU in ${SEQ_ENV}
