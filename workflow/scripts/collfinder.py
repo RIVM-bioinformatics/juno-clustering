@@ -12,7 +12,7 @@ from irods.exception import CollectionDoesNotExist
 
 def irodsConnect(irodsfile="", use_ssl = False):
     '''
-    Connect to irods iCAT and return iRODSSession object
+    Connect to iRODS and return iRODSSession object
     '''
     if irodsfile:
         envFile = irodsfile
@@ -33,11 +33,11 @@ def irodsConnect(irodsfile="", use_ssl = False):
     return session
 
 def collfinder():
-    parser = argparse.ArgumentParser(description='Find report collection based on metadata parameters')
+    parser = argparse.ArgumentParser(description='Find clustering collection based on metadata parameters')
     parser.add_argument('-i', '--input_collection', help='Input collection', required=True)
     parser.add_argument('-S', '--use_ssl', help="Use SSL for irods connection", action="store_true")
-    parser.add_argument('-m', '--match_attr', help='Metadata AVUs on input to match to report collection', action='append', required=True)
-    parser.add_argument('-r', '--run_number_attr', help='Sequential numbering attribute on report collection', required=True)
+    parser.add_argument('-m', '--match_attr', help='Metadata AVUs on input to match to clustering collection', action='append', required=True)
+    parser.add_argument('-r', '--run_time_attr', help='Sequential attribute on clustering collection', required=True)
     parser.add_argument('-x', '--extra_metadata', help='Extra metadata to match', action='append', default=[])
     parser.add_argument('-X', '--extra_metadata_not', help='Extra metadata to not match', action='append', default=[])
     parser.add_argument('-l', '--log_file', help='Log file path', default='collfinder.log')
@@ -56,30 +56,30 @@ def collfinder():
         irods_session = irodsConnect(use_ssl=args.use_ssl)
         logging.info(f"Connected to iRODS. Input collection: {args.input_collection}")
 
-        # Get input collection and its metadata
+        # Get input collection and it´s metadata
         try:
             input_collection = irods_session.collections.get(args.input_collection)
         except CollectionDoesNotExist:
-            logging.error('Input collection not found: %s', args.input_collection)
+            logging.error(f'Input collection not found: {args.input_collection}')
             return False
-        input_meta = { x.name: x.value for x in input_collection.metadata.items()}
+        input_meta = { x.name: x.value for x in input_collection.metadata.items() }
         logging.info(f"Fetched metadata for input collection: {args.input_collection}")
 
         # Verify if all match attributes are on input collection
         for attr in args.match_attr:
             if attr not in input_meta:
-                logging.error('Attribute %s missing on collection %s', attr, args.input_collection)
+                logging.error(f'Attribute {attr} missing on collection {args.input_collection}')
                 return False
 
-        # Get run number from input (collection timestamp)
-        run_number = input_meta.get(args.run_number_attr, None) #using the run timestamp as run number
-        if run_number is None:
-            logging.error('Attribute %s not found on collection %s', args.run_number_attr, args.input_collection)
+        # Get run time from input
+        run_time = input_meta.get(args.run_time_attr, None)
+        if run_time is None:
+            logging.error(f'Attribute {args.run_time_attr} not found on collection {args.input_collection}')
             return False
         try:
-            run_number = int(float(run_number)) #to truncate decimal part if timestamp is float
+            run_time = int(float(run_time)) #to truncate decimal part if timestamp is float
         except Exception as e:
-            logging.error('Failed to convert run number attribute %s to int: %s', args.run_number_attr, str(e))
+            logging.error(f'Failed to convert run time attribute {args.run_time_attr} to int: {str(e)}')
             return False
 
         # Difficult to match to multiple AVUs in one query. Start with first match attribute
@@ -91,15 +91,15 @@ def collfinder():
                 Criterion('=', CollectionMeta.value, value))
             result_set = { q[Collection.name]: None for q in query }
         except Exception as e:
-            logging.error('Error querying collections: %s', str(e))
+            logging.error(f'Error querying collections: {str(e)}')
             return False
 
         # Store metadata for result set
         for c in result_set:
             try:
-                result_set[c] = { m.name: m.value for m in irods_session.collections.get(c).metadata.items() }
+                result_set[c] = {m.name: m.value for m in irods_session.collections.get(c).metadata.items()}
             except Exception as e:
-                logging.warning('Could not fetch metadata for collection %s: %s', c, str(e))
+                logging.warning(f'Could not fetch metadata for collection {c}: {str(e)}')
                 result_set[c] = None
 
         for attr in args.match_attr[1:]:
@@ -115,7 +115,7 @@ def collfinder():
             try:
                 attr, value = meta.split('=', 1)
             except ValueError:
-                logging.warning('Invalid extra_metadata format (should be key=value): %s', meta)
+                logging.warning(f'Invalid extra_metadata format (should be key=value): {meta}')
                 continue
             for c in result_set:
                 if result_set[c]:
@@ -129,7 +129,7 @@ def collfinder():
             try:
                 attr, value = meta.split('=', 1)
             except ValueError:
-                logging.warning('Invalid extra_metadata_not format (should be key=value): %s', meta)
+                logging.warning(f'Invalid extra_metadata_not format (should be key=value): {meta}')
                 continue
             for c in result_set:
                 if not result_set[c]:
@@ -141,21 +141,21 @@ def collfinder():
                     result_set[c] = None
                     continue
 
-        # Find the previous run number
-        run_number_found = -1
+        # Find the previous run time
+        run_time_found = -1
         previous_collection = None
         for c in result_set:
             if result_set[c]:
-                if args.run_number_attr in result_set[c]:
+                if args.run_time_attr in result_set[c]:
                     try:
-                        current_run_number = int(float(result_set[c][args.run_number_attr]))
+                        current_run_time = int(float(result_set[c][args.run_time_attr]))
                     except Exception as e:
-                        logging.warning('Failed to convert run number for collection %s: %s', c, str(e))
+                        logging.warning(f'Failed to convert run time for collection {c}: {str(e)}')
                         continue
-                    # if current_run_number < run_number and current_run_number > run_number_found:
-                    if current_run_number > run_number_found: #if current input collection timestamp is later than previous found timestamp
+
+                    if current_run_time < run_time and current_run_time > run_time_found:
                         previous_collection = c
-                        run_number_found = current_run_number
+                        run_time_found = current_run_time
 
         if previous_collection is not None:
             logging.info(f"Previous collection found: {previous_collection}")
